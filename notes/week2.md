@@ -5,10 +5,4 @@ We were going to create a cascade two bar but decided to create a reverse four b
 For the claw we ordered the vex claw kit v2 but the kit would not have arrived in time. Because of this we had to design a replacment claw. By attaching two 5*5 c-channels side by side horizontally and attaching 8 steel screw we created somethng that can hold the pin and cup at the same time and when they are seperated. We need to add mesh to the claw and attach it to the motor later. It also needs to be attach to the lift horizontal to the lift.
 ## Drive-train
 We changed our design from two omnis in the front and 4 rubber wheels in the back to an omni in the front and back and a rubber wheel in between. 
-## CAD Pics
-![alt text](<pics/Screenshot 2026-10-15 5.20.34 PM.png>) 
-![alt text](<pics/Screenshot 2026-10-15 9.42.18 PM.png>) 
-![alt text](<pics/Screenshot 2026-10-15 9.42.30 PM.png>) 
-![alt text](<pics/Screenshot 2026-10-15 9.42.55 PM.png>) 
-![alt text](<pics/Screenshot 2026-10-15 9.43.10 PM.png>) 
-![alt text](<pics/Screenshot 2026-10-15 9.43.34 PM.png>)
+
