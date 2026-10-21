@@ -58,7 +58,7 @@ class CUI {
     Example Usage:
     CUI cui;
     // Create a menu with three options: "Tank drive", "Arcade drive", and "Autonomous".
-    auto mainmenu = cui.menu("Tank drive", "Arcade drive", "Autonomous");
+    auto mainmenu = cui.Menu("Tank drive", "Arcade drive", "Autonomous");
     updateMenu(); // Display the menu
     while (true) {
         <OTHER ROBOT CODE>
