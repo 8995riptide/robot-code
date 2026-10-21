@@ -1,7 +1,7 @@
 #include "pros/apix.h"
 
-class CUI() {
-    pros::Controller controller(pros::E_CONTROLLER_MASTER);
+class CUI {
+    pros::Controller controller{pros::E_CONTROLLER_MASTER};
 
     // Clears the controller's screen
     void clear() {

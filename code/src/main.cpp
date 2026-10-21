@@ -2,6 +2,7 @@
 #include "titanselect/titanselect.h"
 #include "lemlib/api.hpp"
 #include "pros/apix.h"
+#include "cui.h"
 
 /**
  * A callback function for LLEMU's center button.
