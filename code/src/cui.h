@@ -53,4 +53,33 @@ class CUI {
             // The user can call updateMenu() to display the menu and getSelection() to check for user input.
         }
     }
+
+    /*
+    Example Usage:
+    CUI cui;
+    // Create a menu with three options: "Tank drive", "Arcade drive", and "Autonomous".
+    auto mainmenu = cui.menu("Tank drive", "Arcade drive", "Autonomous");
+    updateMenu(); // Display the menu
+    while (true) {
+        <OTHER ROBOT CODE>
+
+        int selection = getSelection(); // Check for user input
+        if (selection == 1) {
+            // User selected "Tank drive"
+            break; // Exit the menu loop or do whatever you want to do when the user selects "Tank drive"
+        } else if (selection == 2) {
+            // User selected "Arcade drive"
+            break; // Exit the menu loop or do whatever you want to do when the user selects "Arcade drive"
+        } else if (selection == 3) {
+            // User selected "Autonomous"
+            break; // Exit the menu loop or do whatever you want to do when the user selects "Autonomous"
+        } else if (selection == 0) {
+            // User pressed the left arrow (back)
+            break; // Exit the menu loop or do whatever you want to do when the user presses the left arrow
+        }
+            
+        <OTHER ROBOT CODE>
+    }
+    */
+
 };
