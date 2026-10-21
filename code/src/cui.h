@@ -21,7 +21,7 @@ class CUI {
     // Returns an integer representing the selected option.
     // 1 = Option 1, 2 = Option 2, etc.
     // 0 = No selection/back. It's the left arrow.
-    class menu {
+    class Menu {
         User(char* option1, char* option2, char* option3) {
             // Display the menu options on the controller's screen
             void updateMenu() {
@@ -77,7 +77,7 @@ class CUI {
             // User pressed the left arrow (back)
             break; // Exit the menu loop or do whatever you want to do when the user presses the left arrow
         }
-            
+
         <OTHER ROBOT CODE>
     }
     */
