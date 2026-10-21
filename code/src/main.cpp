@@ -1,5 +1,4 @@
 #include "main.h"
-#include "titanselect/titanselect.h"
 #include "lemlib/api.hpp"
 #include "pros/apix.h"
 #include "cui.h"
@@ -26,8 +25,7 @@ void on_center_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void nothing() {
-}
+
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -100,6 +98,7 @@ void blue_auton() {
 	pros::MotorGroup left_mg({1, 3}, pros::MotorGearset::green);    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup right_mg({-4, -6}, pros::MotorGearset::green);  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor claw(-7);
+    pros::Motor lift(8);
 	lemlib::Drivetrain drivetrain(&left_mg,
                               &right_mg,
                               15.5, // 10 inch track width
@@ -144,11 +143,70 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 	chassis.setPose(0, 0, 0);
 	claw.move(100);
 	chassis.turnToHeading(270, 4000);
+    lift.move_relative(100, 127);
 	pros::delay(3000);
 	claw.move(0);
 	
 }
+int auton_selection = 0;
+int drive_selection = 0;
 void competition_initialize() {
+           pros::Controller master(pros::E_CONTROLLER_MASTER);
+       	pros::MotorGroup right_mg({1, 3});    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
+	pros::MotorGroup left_mg({-4, -6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
+	pros::Motor claw(-7);
+    pros::Motor lift(8);
+    master.clear();
+    pros::delay(50);
+    master.print(0, 0, "R: Auton L: Opcontrol");
+    while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
+        pros::delay(10);
+    }
+    if (master.get_digital(DIGITAL_RIGHT)) {
+        master.clear();
+        pros::delay(50);
+        master.print(0, 0, "R: Red L: Blue");
+        while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
+            pros::delay(10);
+        }
+        if (master.get_digital(DIGITAL_RIGHT)) {
+            auton_selection = 1;
+            master.clear();
+            pros::delay(50);
+            master.print(0, 0, "Red auton selected");
+            pros::delay(50);
+        } else if (master.get_digital(DIGITAL_LEFT)) {
+            auton_selection = 2;
+            master.clear();
+            pros::delay(50);
+            master.print(0, 0, "Blue auton selected");
+            pros::delay(50);
+        }
+    }
+    if (master.get_digital(DIGITAL_LEFT)) {
+        master.clear();
+        pros::delay(1000);
+        master.print(0, 0, "R: Tank L: Arcade");
+        while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
+            pros::delay(10);
+        }
+        if (master.get_digital(DIGITAL_RIGHT)) {
+            master.clear();
+            pros::delay(50);
+            master.print(0, 0, "Tank drive selected");
+            pros::delay(50);
+            master.clear();
+            drive_selection = 1;      
+    }
+        if (master.get_digital(DIGITAL_LEFT)) {
+            master.clear();
+            pros::delay(50);
+            master.print(0, 0, "Arcade drive selected");
+            pros::delay(50);
+            master.clear();
+            drive_selection = 2;
+}
+        }
 }
 
 /**
@@ -163,6 +221,11 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+    if (auton_selection == 1) {
+        red_auton();
+    } else if (auton_selection == 2) {
+        blue_auton();
+    }
 }
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -178,34 +241,15 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void initialize() {
-       pros::Controller master(pros::E_CONTROLLER_MASTER);
+
+}
+void opcontrol() {
+               pros::Controller master(pros::E_CONTROLLER_MASTER);
        	pros::MotorGroup right_mg({1, 3});    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup left_mg({-4, -6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor claw(-7);
     pros::Motor lift(8);
-    master.clear();
-    pros::delay(50);
-    master.print(0, 0, "R: Auton L: Opcontrol");
-    while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
-        pros::delay(10);
-    }
-    if (master.get_digital(DIGITAL_RIGHT)) {
-        master.clear();
-        pros::delay(50);
-    }
-    if (master.get_digital(DIGITAL_LEFT)) {
-        master.clear();
-        pros::delay(1000);
-        master.print(0, 0, "R: Tank L: Arcade");
-        while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
-            pros::delay(10);
-        }
-        if (master.get_digital(DIGITAL_RIGHT)) {
-            master.clear();
-            pros::delay(50);
-            master.print(0, 0, "Tank drive selected");
-            pros::delay(50);
-            master.clear();
+    if (drive_selection == 1) {
         while (true) {
         int dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
 		int turn = master.get_analog(ANALOG_RIGHT_Y);  // Gets the turn left/right from right joystick
@@ -222,15 +266,9 @@ void initialize() {
             claw.move(0);
         }
 		pros::delay(20);                               // Run for 20 ms then update  
-        }      
-    }
-        if (master.get_digital(DIGITAL_LEFT)) {
-            master.clear();
-            pros::delay(50);
-            master.print(0, 0, "Arcade drive selected");
-            pros::delay(50);
-            master.clear();
-            while (true) {
+        }
+    } else if (drive_selection == 2) {
+        while (true) {
             int throttle = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
 		int turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
         		int l1 = master.get_digital(DIGITAL_L1);
@@ -247,6 +285,5 @@ void initialize() {
         }
 		pros::delay(20);                               // Run for 20 ms then update
             }
-}
-        }
+    }
 }
