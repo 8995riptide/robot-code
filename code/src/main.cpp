@@ -219,8 +219,7 @@ void competition_initialize() {
             pros::delay(50);
             master.clear();
             drive_selection = 1;      
-    }
-        if (master.get_digital(DIGITAL_LEFT)) {
+    } else if (master.get_digital(DIGITAL_LEFT)) {
             master.clear();
             pros::delay(50);
             master.rumble(".");
