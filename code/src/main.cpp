@@ -237,7 +237,6 @@ void competition_initialize() {
     master.print(2, 0, "You got this!");
     pros::delay(2000);
     master.clear();
-
 }
 
 /**
@@ -277,6 +276,9 @@ void autonomous() {
 void initialize() {
     chassis.calibrate();  // Calibrates the IMU and tracking wheels. This should be called in the initialize function
 	chassis.setPose(0, 0, 0);
+    competition_initialize();
+    autonomous();
+    opcontrol();
 }
 void opcontrol() {
     master.print(0, 0, "opcontrol begun!");
