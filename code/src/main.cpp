@@ -119,7 +119,7 @@ void competition_initialize() {
     int flags = 0;
     std::vector<uint32_t> left_flags = left_mg.get_flags_all();
     for (int i = 0; i < left_flags.size(); i++) {
-        if (left_flags[i] and pros::E_MOTOR_FLAGS_BUSY) {
+        if (left_flags[i] & pros::E_MOTOR_FLAGS_BUSY) {
             master.clear();
             pros::delay(50);
             master.print(0, 0, "Port %d disconnected", left_mg.get_port(i));
@@ -131,7 +131,7 @@ void competition_initialize() {
     pros::delay(100);
     std::vector<uint32_t> right_flags = right_mg.get_flags_all();
     for (int i = 0; i < right_flags.size(); i++) {
-        if (right_flags[i] and pros::E_MOTOR_FLAGS_BUSY) {
+        if (right_flags[i] & pros::E_MOTOR_FLAGS_BUSY) {
             pros::delay(50);
             master.print(1, 0, "Port %d disconnected", right_mg.get_port(i));
             pros::delay(50);
@@ -185,7 +185,7 @@ void competition_initialize() {
         while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
             pros::delay(10);
         }
-        if (master.get_digital_new_press(DIGITAL_RIGHT)) {
+        if (master.get_digital(DIGITAL_RIGHT)) {
             auton_selection = 1;
             master.clear();
             pros::delay(50);
@@ -193,7 +193,7 @@ void competition_initialize() {
             pros::delay(50);
             master.print(0, 0, "Red auton selected");
             pros::delay(50);
-        } else if (master.get_digital_new_press(DIGITAL_LEFT)) {
+        } else if (master.get_digital(DIGITAL_LEFT)) {
             auton_selection = 2;
             master.clear();
             pros::delay(50);
@@ -210,7 +210,7 @@ void competition_initialize() {
         while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
             pros::delay(10);
         }
-        if (master.get_digital_new_press(DIGITAL_RIGHT)) {
+        if (master.get_digital(DIGITAL_RIGHT)) {
             master.clear();
             pros::delay(50);
             master.rumble(".");
@@ -220,7 +220,7 @@ void competition_initialize() {
             master.clear();
             drive_selection = 1;      
     }
-        if (master.get_digital_new_press(DIGITAL_LEFT)) {
+        if (master.get_digital(DIGITAL_LEFT)) {
             master.clear();
             pros::delay(50);
             master.rumble(".");
