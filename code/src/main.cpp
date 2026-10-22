@@ -83,6 +83,13 @@ void red_auton() {
 	chassis.turnToHeading(-270, 2000);
 	pros::delay(3000);
 	claw.move(0);
+    master.clear();
+    pros::delay(50);
+    master.print(0, 0, "Auton done!");
+    pros::delay(50);
+    master.print(1, 0, "Proceeding to opcontrol...");
+    pros::delay(50);
+    master.clear();
 }
 void blue_auton() {
 	claw.move(100);
@@ -90,6 +97,13 @@ void blue_auton() {
     lift.move_relative(100, 127);
 	pros::delay(3000);
 	claw.move(0);
+    master.clear();
+    pros::delay(50);
+    master.print(0, 0, "Auton done!");
+    pros::delay(50);
+    master.print(1, 0, "Proceeding to opcontrol...");
+    pros::delay(50);
+    master.clear();
 }
 int auton_selection = 0;
 int drive_selection = 0;
@@ -101,7 +115,49 @@ void competition_initialize() {
     master.print(0, 0, "Odometry calibrated. CUI Ready.");
     pros::delay(100);
     master.print(1, 0, "Checking port config...");
-    master.print(1, 0, " Starting ROBOS...");
+    pros::delay(100);
+    int flags = 0;
+    std::vector<uint32_t> left_flags = left_mg.get_flags_all();
+    for (int i = 0; i < left_flags.size(); i++) {
+        if (left_flags[i] and pros::E_MOTOR_FLAGS_BUSY) {
+            master.clear();
+            pros::delay(50);
+            master.print(0, 0, "Port %d disconnected", left_mg.get_port(i));
+            pros::delay(50);
+            master.rumble("-");
+            flags = 1;
+        }
+    }
+    pros::delay(100);
+    std::vector<uint32_t> right_flags = right_mg.get_flags_all();
+    for (int i = 0; i < right_flags.size(); i++) {
+        if (right_flags[i] and pros::E_MOTOR_FLAGS_BUSY) {
+            pros::delay(50);
+            master.print(1, 0, "Port %d disconnected", right_mg.get_port(i));
+            pros::delay(50);
+            master.rumble("-");
+            flags = 1;
+        }
+    }
+    if (claw.get_flags() & pros::E_MOTOR_FLAGS_BUSY) {
+        pros::delay(50);
+        master.print(2, 0, "Port %d disconnected", claw.get_port());
+        pros::delay(50);
+        master.rumble("-");
+        flags = 1;
+    }
+    if (lift.get_flags() & pros::E_MOTOR_FLAGS_BUSY) {
+        pros::delay(50);
+        master.print(2, 0, "Port %d disconnected", lift.get_port());
+        pros::delay(50);
+        master.rumble("-");
+        flags = 1;
+    }
+    pros::delay(100);
+    while (flags == 1) {
+        pros::delay(100);
+    }
+    master.print(2, 0, " Starting ROBOS...");
     pros::delay(500);
     master.clear();
     pros::delay(50);
@@ -119,24 +175,21 @@ void competition_initialize() {
         master.print(2, i, "%c", line3_list[i]);
         pros::delay(50);
     }
+    master.rumble(". . .");
     pros::delay(2000);
     master.clear();
     pros::delay(50);
-    master.print(0, 0, "R: Auton L: Opcontrol");
-    while (!master.get_digital_new_press(DIGITAL_RIGHT) && !master.get_digital_new_press(DIGITAL_LEFT)) {
-        pros::delay(10);
-    }
-    if (master.get_digital_new_press(DIGITAL_RIGHT)) {
-        master.clear();
-        
-        pros::delay(50);
-        master.print(0, 0, "R: Red L: Blue");
-        while (!master.get_digital_new_press(DIGITAL_RIGHT) && !master.get_digital_new_press(DIGITAL_LEFT)) {
+    master.print(0, 0, "Configure Auton");
+    pros::delay(50);
+        master.print(1, 0, "R: Red L: Blue");
+        while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
             pros::delay(10);
         }
         if (master.get_digital_new_press(DIGITAL_RIGHT)) {
             auton_selection = 1;
             master.clear();
+            pros::delay(50);
+            master.rumble(".");
             pros::delay(50);
             master.print(0, 0, "Red auton selected");
             pros::delay(50);
@@ -144,19 +197,23 @@ void competition_initialize() {
             auton_selection = 2;
             master.clear();
             pros::delay(50);
+            master.rumble(".");
+            pros::delay(50);
             master.print(0, 0, "Blue auton selected");
             pros::delay(50);
         }
-    }
-    if (master.get_digital_new_press(DIGITAL_LEFT)) {
         master.clear();
         pros::delay(1000);
-        master.print(0, 0, "R: Tank L: Arcade");
-        while (!master.get_digital_new_press(DIGITAL_RIGHT) && !master.get_digital_new_press(DIGITAL_LEFT)) {
+        master.print(0, 0, "Configure driving style");
+        pros::delay(50);
+        master.print(1, 0, "R: Tank L: Arcade");
+        while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
             pros::delay(10);
         }
         if (master.get_digital_new_press(DIGITAL_RIGHT)) {
             master.clear();
+            pros::delay(50);
+            master.rumble(".");
             pros::delay(50);
             master.print(0, 0, "Tank drive selected");
             pros::delay(50);
@@ -166,12 +223,22 @@ void competition_initialize() {
         if (master.get_digital_new_press(DIGITAL_LEFT)) {
             master.clear();
             pros::delay(50);
+            master.rumble(".");
+            pros::delay(50);
             master.print(0, 0, "Arcade drive selected");
             pros::delay(50);
             master.clear();
             drive_selection = 2;
 }
-        }
+    pros::delay(50);
+    master.print(0, 0, "Configuration done");
+    pros::delay(50);
+    master.print(1, 0, "You are all set!");
+    pros::delay(50);
+    master.print(2, 0, "You got this!");
+    pros::delay(2000);
+    master.clear();
+
 }
 
 /**
@@ -186,6 +253,9 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+    master.print(0, 0, "Autonomous running");
+    pros::delay(50);
+    master.rumble(".");
     if (auton_selection == 1) {
         red_auton();
     } else if (auton_selection == 2) {
@@ -210,6 +280,9 @@ void initialize() {
 	chassis.setPose(0, 0, 0);
 }
 void opcontrol() {
+    master.print(0, 0, "opcontrol begun!");
+    pros::delay(50);
+    master.rumble(".");
     if (drive_selection == 1) {
         while (true) {
         int dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
