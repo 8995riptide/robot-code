@@ -1,1 +1,9 @@
+# Week 3
+## Drive train+toggle
+The gear train was built at a one to one ratio and the drivetrain is finished. The robot is slow because of the weight but the torque is high. The last steps is to attach eveything to the drive train. The toggle bar was at first not moving the toggle bar but it just needed to be made larger. The toggles now work.
+## Lift
+The lift was shaking really bad so all of the bolts had to be tightened. The motor was also attached with gears so that that the lift would rise at a steady, stable pace. Because of the lack of materials, our lifts max height is 23" when the max height for any bots vertical is 50". This has to be addressed by the nex compition. Hopefully after this comp we will have enough materials to start building the cascade 2-bar.
+## Claw
+For the claw we decided that one side would remain stable while the other side gets attached to a mottor and clamps on to the pin+cup. Suprisingly, this worked really well and the grip on the pin and cup was really strong. We might keep this design for the claw in the future but add pneumatics to make the claw be able to spin 360 degrees.
+## Programming
 
