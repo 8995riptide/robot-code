@@ -78,41 +78,21 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void drive_auton() {
-	claw.move(100);
-	lift.move_relative(18.5, 100);
-    chassis.moveToPoint(0, -6, 1000);
-    chassis.moveToPoint(24, 12, 4000);
-    lift.move_relative(-18.5, 100);
-    claw.move(0);
-    claw.move_relative(90, 100);
-    master.clear();
-    pros::delay(50);
-    master.print(0, 0, "Auton done!");
-    pros::delay(50);
-    master.print(1, 0, "Proceeding to opcontrol...");
-    pros::delay(50);
-    master.clear();
-}
-void nodrive_auton() {
-	claw.move(100);
-	lift.move_relative(18.5, 100);
-    chassis.moveToPoint(0, -6, 1000);
-    chassis.moveToPoint(-24, 12, 4000);
-    lift.move_relative(-18.5, 100);
-    claw.move(0);
-    claw.move_relative(90, 100);
-    master.clear();
-    pros::delay(50);
-    master.print(0, 0, "Auton done!");
-    pros::delay(50);
-    master.print(1, 0, "Proceeding to opcontrol...");
-    pros::delay(50);
-    master.clear();
-}
 int auton_selection = 0;
 int drive_selection = 0;
 void competition_initialize() {
+    while (auton_selection == 0 | drive_selection == 0) {
+        master.clear();
+        pros::delay(50);
+        master.print(0, 0, "Selections have not been configured!");
+        pros::delay(50);
+        master.print(1, 0, "Unplug the controller and");
+        pros::delay(50);
+        master.print(2, 0, "rerun the program to try again!");
+        pros::delay(50);
+        master.rumble("--------");
+        pros::delay(50);
+    }
     chassis.calibrate();  // Calibrates the IMU and tracking wheels. This should be called in the initialize function
 	chassis.setPose(0, 0, 0);
     master.clear();
@@ -138,11 +118,24 @@ void autonomous() {
     master.print(0, 0, "Autonomous running");
     pros::delay(50);
     master.rumble(".");
+    claw.move(100);
+	lift.move_relative(18.5, 100);
+    chassis.moveToPoint(0, -6, 1000);
     if (auton_selection == 1) {
-        drive_auton();
+    chassis.moveToPoint(24, 12, 4000);
     } else if (auton_selection == 2) {
-        nodrive_auton();
+        chassis.moveToPoint(-24, 12, 4000);
     }
+    lift.move_relative(-18.5, 100);
+    claw.move(0);
+    claw.move_relative(90, 100);
+    master.clear();
+    pros::delay(50);
+    master.print(0, 0, "Auton done!");
+    pros::delay(50);
+    master.print(1, 0, "Proceeding to opcontrol...");
+    pros::delay(50);
+    master.clear();
 }
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -189,16 +182,19 @@ void initialize() {
             flags = 1;
         }
     }
+    std::vector<uint32_t> lift_flags = lift.get_flags_all();
+    for (int i = 0; i < lift_flags.size(); i++) {
+        if (lift_flags[i] & pros::E_MOTOR_FLAGS_BUSY) {
+            pros::delay(50);
+            master.print(0, 0, "Port %d disconnected", lift.get_port(i));
+            pros::delay(50);
+            master.rumble("-");
+            flags = 1;
+        }
+    }
     if (claw.get_flags() & pros::E_MOTOR_FLAGS_BUSY) {
         pros::delay(50);
         master.print(2, 0, "Port %d disconnected", claw.get_port());
-        pros::delay(50);
-        master.rumble("-");
-        flags = 1;
-    }
-    if (lift.get_flags() & pros::E_MOTOR_FLAGS_BUSY) {
-        pros::delay(50);
-        master.print(2, 0, "Port %d disconnected", lift.get_port());
         pros::delay(50);
         master.rumble("-");
         flags = 1;
@@ -211,7 +207,7 @@ void initialize() {
     pros::delay(500);
     master.clear();
     pros::delay(50);
-    const std::string charset = "!@#$%&";
+    const std::string charset = "0123456789";
     std::random_device rd;
     std::mt19937 generator(rd());
     std::uniform_int_distribution<std::size_t> distribution(0, charset.size() - 1); 
@@ -222,7 +218,7 @@ void initialize() {
             std::size_t randomIndex = distribution(generator);
             char randomChar = charset[randomIndex];
             master.print(i, n, "%c", randomChar);
-            pros::delay(100);
+            pros::delay(50);
         }
     }
     for (int i = 0; i < 15; i++) {
