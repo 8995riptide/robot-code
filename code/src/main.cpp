@@ -221,13 +221,13 @@ void initialize() {
             pros::delay(50);
         }
     }
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 80; i++) {
         std::size_t randomIndex = distribution(generator);
         char randomChar = charset[randomIndex];
         int randomLineNum = distrib(generator);
         int randomColNum = distrib2(generator);
         master.print(randomLineNum, randomColNum, "%c", randomChar);
-        pros::delay(100);
+        pros::delay(50);
     }
     std::vector<char> chars = {'R', 'O', 'B', 'O', 'S'};
     for (int i = 0; i < 5; i++) {
