@@ -1,11 +1,11 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 #include "pros/apix.h"
-#include "cui.h"
-	pros::MotorGroup left_mg({1, 3}, pros::MotorGearset::green);    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
-	pros::MotorGroup right_mg({-4, -6}, pros::MotorGearset::green);  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
+#include <random>
+	pros::MotorGroup right_mg({1, 3}, pros::MotorGearset::green);    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
+	pros::MotorGroup left_mg({-4, -6}, pros::MotorGearset::green);  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor claw(-7);
-    pros::Motor lift(8);
+    pros::MotorGroup lift({-8, -5}, pros::MotorGearset::red);
     pros::Controller master(pros::E_CONTROLLER_MASTER);
 	lemlib::Drivetrain drivetrain(&left_mg,
                               &right_mg,
@@ -31,7 +31,7 @@
                                               500, // large error range timeout, in milliseconds
                                               20 // maximum acceleration (slew)
 );
-	lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
+	lemlib::ControllerSettings angular_controller(1, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               10, // derivative gain (kD)
                                               3, // anti windup
@@ -78,11 +78,14 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void red_auton() {
+void drive_auton() {
 	claw.move(100);
-	chassis.turnToHeading(-270, 2000);
-	pros::delay(3000);
-	claw.move(0);
+	lift.move_relative(18.5, 100);
+    chassis.moveToPoint(0, -6, 1000);
+    chassis.moveToPoint(24, 12, 4000);
+    lift.move_relative(-18.5, 100);
+    claw.move(0);
+    claw.move_relative(90, 100);
     master.clear();
     pros::delay(50);
     master.print(0, 0, "Auton done!");
@@ -91,12 +94,14 @@ void red_auton() {
     pros::delay(50);
     master.clear();
 }
-void blue_auton() {
+void nodrive_auton() {
 	claw.move(100);
-	chassis.turnToHeading(270, 4000);
-    lift.move_relative(100, 127);
-	pros::delay(3000);
-	claw.move(0);
+	lift.move_relative(18.5, 100);
+    chassis.moveToPoint(0, -6, 1000);
+    chassis.moveToPoint(-24, 12, 4000);
+    lift.move_relative(-18.5, 100);
+    claw.move(0);
+    claw.move_relative(90, 100);
     master.clear();
     pros::delay(50);
     master.print(0, 0, "Auton done!");
@@ -108,7 +113,52 @@ void blue_auton() {
 int auton_selection = 0;
 int drive_selection = 0;
 void competition_initialize() {
+    chassis.calibrate();  // Calibrates the IMU and tracking wheels. This should be called in the initialize function
+	chassis.setPose(0, 0, 0);
     master.clear();
+    pros::delay(50);
+    master.print(0, 0, "Controller plugged in,");
+    master.print(1, 0, "All systems calibrated,");
+    master.print(2, 0, "ready to go!");
+
+}
+
+/**
+ * Runs the user autonomous code. This function will be started in its own task
+ * with the default priority and stack size whenever the robot is enabled via
+ * the Field Management System or the VEX Competition Switch in the autonomous
+ * mode. Alternatively, this function may be called in initialize or opcontrol
+ * for non-competition testing purposes.
+ *
+ * If the robot is disabled or communications is lost, the autonomous task
+ * will be stopped. Re-enabling the robot will restart the task, not re-start it
+ * from where it left off.
+ */
+void autonomous() {
+    master.print(0, 0, "Autonomous running");
+    pros::delay(50);
+    master.rumble(".");
+    if (auton_selection == 1) {
+        drive_auton();
+    } else if (auton_selection == 2) {
+        nodrive_auton();
+    }
+}
+/**
+ * Runs the operator control code. This function will be started in its own task
+ * with the default priority and stack size whenever the robot is enabled via
+ * the Field Management System or the VEX Competition Switch in the operator
+ * control mode.
+ *
+ * If no competition control is connected, this function will run immediately
+ * following initialize().
+ *
+ * If the robot is disabled or communications is lost, the
+ * operator control task will be stopped. Re-enabling the robot will restart the
+ * task, not resume it from where it left off.
+ */
+void initialize() {
+        master.clear();
     pros::delay(50);
     chassis.calibrate();  // Calibrates the IMU and tracking wheels. This should be called in the initialize function
 	chassis.setPose(0, 0, 0);
@@ -161,19 +211,32 @@ void competition_initialize() {
     pros::delay(500);
     master.clear();
     pros::delay(50);
-        std::string line1 = " _  _  _  _  _ ";
-        std::string line2 = "|_|| ||_|/ \|_ ";
-        std::string line3 = "| \\_/|_|\_/ _|";
-        std::vector<char> line1_list(line1.begin(), line1.end());
-        std::vector<char> line2_list(line2.begin(), line2.end());
-        std::vector<char> line3_list(line3.begin(), line3.end());
+    const std::string charset = "!@#$%&";
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<std::size_t> distribution(0, charset.size() - 1); 
+    std::uniform_int_distribution<int> distrib(0, 3); 
+    std::uniform_int_distribution<int> distrib2(0, 15); 
+    for (int i = 0; i < 3; i++) {
+        for (int n = 0; n < 15; n++) {
+            std::size_t randomIndex = distribution(generator);
+            char randomChar = charset[randomIndex];
+            master.print(i, n, "%c", randomChar);
+            pros::delay(100);
+        }
+    }
     for (int i = 0; i < 15; i++) {
-        master.print(0, i, "%c", line1_list[i]);
-        pros::delay(50);
-        master.print(1, i, "%c", line2_list[i]);
-        pros::delay(50);
-        master.print(2, i, "%c", line3_list[i]);
-        pros::delay(50);
+        std::size_t randomIndex = distribution(generator);
+        char randomChar = charset[randomIndex];
+        int randomLineNum = distrib(generator);
+        int randomColNum = distrib2(generator);
+        master.print(randomLineNum, randomColNum, "%c", randomChar);
+        pros::delay(100);
+    }
+    std::vector<char> chars = {'R', 'O', 'B', 'O', 'S'};
+    for (int i = 0; i < 5; i++) {
+        master.print(1, i+5, "%c", chars[i]);
+        pros::delay(100);
     }
     master.rumble(". . .");
     pros::delay(2000);
@@ -181,7 +244,7 @@ void competition_initialize() {
     pros::delay(50);
     master.print(0, 0, "Configure Auton");
     pros::delay(50);
-        master.print(1, 0, "R: Red L: Blue");
+        master.print(1, 0, "R: Driver L: Judges");
         while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
             pros::delay(10);
         }
@@ -191,7 +254,7 @@ void competition_initialize() {
             pros::delay(50);
             master.rumble(".");
             pros::delay(50);
-            master.print(0, 0, "Red auton selected");
+            master.print(0, 0, "Drive auton selected");
             pros::delay(50);
         } else if (master.get_digital(DIGITAL_LEFT)) {
             auton_selection = 2;
@@ -199,7 +262,7 @@ void competition_initialize() {
             pros::delay(50);
             master.rumble(".");
             pros::delay(50);
-            master.print(0, 0, "Blue auton selected");
+            master.print(0, 0, "Judges auton selected");
             pros::delay(50);
         }
         master.clear();
@@ -234,89 +297,45 @@ void competition_initialize() {
     pros::delay(50);
     master.print(1, 0, "You are all set!");
     pros::delay(50);
-    master.print(2, 0, "You got this!");
+    master.print(2, 0, "Plug in the controller now!");
     pros::delay(2000);
     master.clear();
-}
-
-/**
- * Runs the user autonomous code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the autonomous
- * mode. Alternatively, this function may be called in initialize or opcontrol
- * for non-competition testing purposes.
- *
- * If the robot is disabled or communications is lost, the autonomous task
- * will be stopped. Re-enabling the robot will restart the task, not re-start it
- * from where it left off.
- */
-void autonomous() {
-    master.print(0, 0, "Autonomous running");
-    pros::delay(50);
-    master.rumble(".");
-    if (auton_selection == 1) {
-        red_auton();
-    } else if (auton_selection == 2) {
-        blue_auton();
-    }
-}
-/**
- * Runs the operator control code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the operator
- * control mode.
- *
- * If no competition control is connected, this function will run immediately
- * following initialize().
- *
- * If the robot is disabled or communications is lost, the
- * operator control task will be stopped. Re-enabling the robot will restart the
- * task, not resume it from where it left off.
- */
-void initialize() {
-    chassis.calibrate();  // Calibrates the IMU and tracking wheels. This should be called in the initialize function
-	chassis.setPose(0, 0, 0);
-    competition_initialize();
-    autonomous();
-    opcontrol();
 }
 void opcontrol() {
     master.print(0, 0, "opcontrol begun!");
     pros::delay(50);
     master.rumble(".");
-    if (drive_selection == 1) {
-        while (true) {
-        int dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
-		int turn = master.get_analog(ANALOG_RIGHT_Y);  // Gets the turn left/right from right joystick
-		int l1 = master.get_digital(DIGITAL_L1);
-        int l2 = master.get_digital(DIGITAL_L2);
-        int x = master.get_digital(DIGITAL_X);
-        int y = master.get_digital(DIGITAL_Y);
-		chassis.tank(dir, turn);                      // Sets left and right motor voltage
-        lift.move(l1 * 127 - l2 * 127); // Sets lift motor voltage
-        if (x) {
-            claw.move(127);
-        } else if (y) {
-            claw.move(0);
-        }
-		pros::delay(20);                               // Run for 20 ms then update  
-        }
-    } else if (drive_selection == 2) {
+    pros::delay(50);
+    master.print(1, 0, "R: Tank L: Arcade");
         while (true) {
             int throttle = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
 		int turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
+        int throttle2 = master.get_analog(ANALOG_RIGHT_Y);
         		int l1 = master.get_digital(DIGITAL_L1);
         int l2 = master.get_digital(DIGITAL_L2);
         int x = master.get_digital(DIGITAL_X);
         int y = master.get_digital(DIGITAL_Y);
-		chassis.arcade(throttle, turn);                      // Sets left and right motor voltage
-                lift.move(l1 * 127 - l2 * 127); // Sets lift motor voltage
+        lift.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
+        if (master.get_digital_new_press(DIGITAL_LEFT)) {
+            drive_selection = 2;
+        } else if (master.get_digital_new_press(DIGITAL_RIGHT)) {
+            drive_selection = 1;
+        }
+        if (drive_selection == 1) {
+            chassis.tank(throttle, throttle2);
+        } else if (drive_selection == 2) {
+            chassis.arcade(throttle, turn);
+        }
+        if (l1) {
+            lift.move(l1 * 127);
+        } else if (l2) {
+            lift.move_velocity(0);
+        }
         if (x) {
             claw.move(127);
         } else if (y) {
-            claw.move(0);
+            claw.move(-50);
         }
 		pros::delay(20);                               // Run for 20 ms then update
             }
-    }
 }
