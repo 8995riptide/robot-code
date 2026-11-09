@@ -23,7 +23,7 @@
 );
 	lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              3, // derivative gain (kD)
+                                              10, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -200,9 +200,9 @@ void initialize() {
         flags = 1;
     }
     pros::delay(100);
-    while (flags == 1) {
-        pros::delay(100);
-    }
+    // while (flags == 1) {
+        // pros::delay(100);
+    // }
     master.print(2, 0, " Starting ROBOS...");
     pros::delay(500);
     master.clear();
@@ -227,7 +227,11 @@ void initialize() {
         char randomChar = charset[randomIndex];
         int randomLineNum = distrib(generator);
         int randomColNum = distrib2(generator);
+            if (randomColNum >= 5 && randomColNum <= 9 && randomLineNum == 1) {
+                pros::delay(50);
+        } else {
         master.print(randomLineNum, randomColNum, "%c", randomChar);
+        }
         pros::delay(50);
         if (i % 16 == 0) {
             master.print(1, (i/16)+5, "%c", chars[(i/16)]);
@@ -295,6 +299,7 @@ void initialize() {
     master.print(2, 0, "Plug in the controller now!");
     pros::delay(2000);
     master.clear();
+    autonomous();
 }
 void opcontrol() {
     master.print(0, 0, "opcontrol begun!");
@@ -313,8 +318,10 @@ void opcontrol() {
         lift.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
         if (master.get_digital_new_press(DIGITAL_LEFT)) {
             drive_selection = 2;
+            master.rumble(".");
         } else if (master.get_digital_new_press(DIGITAL_RIGHT)) {
             drive_selection = 1;
+            master.rumble(".");
         }
         if (drive_selection == 1) {
             chassis.tank(throttle, throttle2);
