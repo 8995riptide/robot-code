@@ -28,11 +28,12 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./website
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Go to Directory
-        run: cd website
       - name: Setup pnpm
         uses: pnpm/action-setup@v6.1.1
         with:
