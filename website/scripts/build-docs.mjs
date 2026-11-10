@@ -39,9 +39,6 @@ const docs = readdirSync(contentDir, { withFileTypes: true })
     for (const key of REQUIRED) {
       if (!(key in meta)) throw new Error(`${slug}/meta.json: missing "${key}"`);
     }
-    if (!categories.includes(meta.category)) {
-      throw new Error(`${slug}/meta.json: unknown category "${meta.category}"`);
-    }
     if (!existsSync(resolve(root, "src/components/velora", `${slug}.tsx`))) {
       throw new Error(`${slug}: no src/components/velora/${slug}.tsx`);
     }

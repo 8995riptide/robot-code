@@ -1,7 +1,7 @@
 {
-  "Backgrounds": {
-    "heading": "Animated React background components",
-    "description": "Aurora, beams, meteors, vortex, waves, grids and particle fields for hero and CTA sections. Each is a lightweight backdrop you drop into a relative section — canvas loops pause offscreen and stop under reduced motion."
+  "IPSD V5 Robotics Invitational": {
+    "heading": "IPSD V5 Robotics Invitational",
+    "description": "Details about the IPSD V5 Robotics Invitational event."
   },
   "Text": {
     "heading": "Animated text components for React",
