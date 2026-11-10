@@ -1,0 +1,20 @@
+{
+  "title": "Scroll Progress",
+  "description": "Gradient page-progress bar pinned to the top.",
+  "category": "Scroll",
+  "since": "0.1.0",
+  "dependencies": [
+    "motion"
+  ],
+  "a11y": {
+    "motion": "The bar follows the scroll position directly, with no spring easing or overshoot.",
+    "keyboard": null,
+    "screenReader": "Decorative; aria-hidden."
+  },
+  "examples": [
+    {
+      "name": "default",
+      "title": "Default"
+    }
+  ]
+}

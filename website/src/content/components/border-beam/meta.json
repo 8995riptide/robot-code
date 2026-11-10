@@ -1,0 +1,20 @@
+{
+  "title": "Border Beam",
+  "description": "A beam of light traveling around any border.",
+  "category": "Effects",
+  "since": "0.1.0",
+  "dependencies": [
+    "motion"
+  ],
+  "a11y": {
+    "motion": "The beam is hidden entirely; only the parent's normal border remains.",
+    "keyboard": null,
+    "screenReader": "Decorative; aria-hidden."
+  },
+  "examples": [
+    {
+      "name": "default",
+      "title": "Default"
+    }
+  ]
+}

@@ -1,0 +1,523 @@
+// Generates registry.json (for `shadcn build` → public/r/*.json)
+// and public/llms.txt from src/lib/components-meta.json.
+import { readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+const root = resolve(import.meta.dirname, "..");
+const meta = JSON.parse(
+  readFileSync(resolve(root, "src/lib/components-meta.json"), "utf8")
+);
+
+const HOMEPAGE = process.env.REGISTRY_HOMEPAGE ?? "https://velora.colorlib.com";
+
+// ---------------------------------------------------------------------------
+// Shared CSS fragments. Components copied into a foreign project need their
+// keyframes and brand tokens to travel with them.
+// ---------------------------------------------------------------------------
+
+const brandVars = {
+  light: {
+    brand: "oklch(0.546 0.245 263)",
+    "brand-from": "oklch(0.546 0.245 263)",
+    "brand-via": "oklch(0.623 0.214 260)",
+    "brand-to": "oklch(0.685 0.169 237)",
+  },
+  dark: {
+    brand: "oklch(0.623 0.214 260)",
+    "brand-from": "oklch(0.623 0.214 260)",
+    "brand-via": "oklch(0.707 0.165 255)",
+    "brand-to": "oklch(0.746 0.16 233)",
+  },
+  theme: {
+    "color-brand": "var(--brand)",
+    "color-brand-from": "var(--brand-from)",
+    "color-brand-via": "var(--brand-via)",
+    "color-brand-to": "var(--brand-to)",
+  },
+};
+
+const keyframes = {
+  marquee: {
+    "@keyframes marquee": {
+      from: { transform: "translateX(0)" },
+      to: { transform: "translateX(calc(-100% - var(--gap)))" },
+    },
+    "@keyframes marquee-vertical": {
+      from: { transform: "translateY(0)" },
+      to: { transform: "translateY(calc(-100% - var(--gap)))" },
+    },
+  },
+  shimmer: {
+    "@keyframes shimmer": {
+      from: { "background-position": "200% 0" },
+      to: { "background-position": "-200% 0" },
+    },
+  },
+  gradient: {
+    "@keyframes gradient": {
+      "0%, 100%": { "background-position": "0% 50%" },
+      "50%": { "background-position": "100% 50%" },
+    },
+  },
+  orbit: {
+    "@keyframes orbit": {
+      "0%": {
+        transform:
+          "rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * -1px)) rotate(calc(var(--angle) * -1deg))",
+      },
+      "100%": {
+        transform:
+          "rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * -1px)) rotate(calc((var(--angle) * 1deg + 360deg) * -1))",
+      },
+    },
+  },
+  aurora: {
+    "@keyframes aurora-1": {
+      "0%": { transform: "translate(-10%, -12%) scale(1)" },
+      "50%": { transform: "translate(12%, 8%) scale(1.25)" },
+      "100%": { transform: "translate(-6%, 14%) scale(0.95)" },
+    },
+    "@keyframes aurora-2": {
+      "0%": { transform: "translate(12%, 10%) scale(1.1)" },
+      "50%": { transform: "translate(-14%, -6%) scale(0.9)" },
+      "100%": { transform: "translate(8%, -12%) scale(1.2)" },
+    },
+    "@keyframes aurora-3": {
+      "0%": { transform: "translate(0%, 16%) scale(0.95)" },
+      "50%": { transform: "translate(10%, -10%) scale(1.15)" },
+      "100%": { transform: "translate(-12%, 4%) scale(1)" },
+    },
+  },
+  meteor: {
+    "@keyframes meteor": {
+      "0%": {
+        transform: "rotate(var(--meteor-angle, 215deg)) translateX(0)",
+        opacity: "1",
+      },
+      "70%": { opacity: "1" },
+      "100%": {
+        transform: "rotate(var(--meteor-angle, 215deg)) translateX(-600px)",
+        opacity: "0",
+      },
+    },
+  },
+  retroGrid: {
+    "@keyframes retro-grid": {
+      from: { transform: "translateY(-50%)" },
+      to: { transform: "translateY(0)" },
+    },
+  },
+  rainbow: {
+    "@keyframes rainbow": {
+      from: { "background-position": "0% 50%" },
+      to: { "background-position": "200% 50%" },
+    },
+  },
+  ripple: {
+    "@keyframes ripple": {
+      from: { transform: "scale(0)", opacity: "0.35" },
+      to: { transform: "scale(1)", opacity: "0" },
+    },
+  },
+  movingBorder: {
+    "@keyframes moving-border": {
+      from: { "offset-distance": "0%" },
+      to: { "offset-distance": "100%" },
+    },
+  },
+  flicker: {
+    "@keyframes flicker": {
+      "0%, 100%": { opacity: "var(--flicker-max, 0.45)" },
+      "50%": { opacity: "var(--flicker-min, 0.08)" },
+    },
+  },
+  rippleRing: {
+    "@keyframes ripple-ring": {
+      from: { transform: "scale(0.6)", opacity: "0.5" },
+      to: { transform: "scale(2.2)", opacity: "0" },
+    },
+  },
+};
+
+// Per-slug extras: { css, cssVars } merged into the registry item.
+const extras = {
+  marquee: {
+    css: keyframes.marquee,
+    cssVars: {
+      theme: {
+        "animate-marquee": "marquee var(--duration, 40s) linear infinite",
+        "animate-marquee-vertical":
+          "marquee-vertical var(--duration, 40s) linear infinite",
+      },
+    },
+  },
+  "3d-marquee": {
+    css: { "@keyframes marquee-vertical": keyframes.marquee["@keyframes marquee-vertical"] },
+    cssVars: {
+      theme: {
+        "animate-marquee-vertical":
+          "marquee-vertical var(--duration, 40s) linear infinite",
+      },
+    },
+  },
+  "shimmer-button": {
+    css: keyframes.shimmer,
+    cssVars: { theme: { "animate-shimmer": "shimmer 2.5s linear infinite" } },
+  },
+  "text-shimmer": {
+    css: keyframes.shimmer,
+    cssVars: { theme: { "animate-shimmer": "shimmer 2.5s linear infinite" } },
+  },
+  "animated-gradient-text": {
+    css: keyframes.gradient,
+    cssVars: {
+      ...brandVars,
+      theme: {
+        ...brandVars.theme,
+        "animate-gradient": "gradient 6s ease infinite",
+      },
+    },
+  },
+  "orbiting-circles": {
+    css: keyframes.orbit,
+    cssVars: {
+      theme: { "animate-orbit": "orbit calc(var(--duration) * 1s) linear infinite" },
+    },
+  },
+  "aurora-background": {
+    css: keyframes.aurora,
+    cssVars: {
+      ...brandVars,
+      theme: {
+        ...brandVars.theme,
+        "animate-aurora-1": "aurora-1 14s ease-in-out infinite alternate",
+        "animate-aurora-2": "aurora-2 18s ease-in-out infinite alternate",
+        "animate-aurora-3": "aurora-3 22s ease-in-out infinite alternate",
+      },
+    },
+  },
+  meteors: {
+    css: keyframes.meteor,
+    cssVars: { theme: { "animate-meteor": "meteor 5s linear infinite" } },
+  },
+  "retro-grid": {
+    css: keyframes.retroGrid,
+    cssVars: {
+      theme: { "animate-retro-grid": "retro-grid 18s linear infinite" },
+    },
+  },
+  "border-beam": { cssVars: brandVars },
+  "scroll-progress": { cssVars: brandVars },
+  "background-beams": { cssVars: brandVars },
+  "sparkles-text": { cssVars: brandVars },
+  lamp: { cssVars: brandVars },
+  "spotlight-card": { cssVars: brandVars },
+
+  // ── added in 0.4.0 ─────────────────────────────────────────────
+  "rainbow-button": {
+    css: keyframes.rainbow,
+    cssVars: {
+      ...brandVars,
+      theme: {
+        ...brandVars.theme,
+        "animate-rainbow": "rainbow var(--rainbow-duration, 4s) linear infinite",
+      },
+    },
+  },
+  "ripple-button": {
+    css: keyframes.ripple,
+    cssVars: { theme: { "animate-ripple": "ripple 600ms ease-out forwards" } },
+  },
+  "moving-border": {
+    css: keyframes.movingBorder,
+    cssVars: {
+      ...brandVars,
+      theme: {
+        ...brandVars.theme,
+        "animate-moving-border":
+          "moving-border var(--mb-duration, 4s) linear infinite",
+      },
+    },
+  },
+  "flickering-grid": {
+    css: keyframes.flicker,
+    cssVars: { theme: { "animate-flicker": "flicker 3s steps(1, end) infinite" } },
+  },
+  ripple: {
+    css: keyframes.rippleRing,
+    cssVars: {
+      ...brandVars,
+      theme: {
+        ...brandVars.theme,
+        "animate-ripple-ring": "ripple-ring 3s ease-out infinite",
+      },
+    },
+  },
+  "light-rays": { cssVars: brandVars },
+  "sticky-banner": { cssVars: brandVars },
+  "animated-testimonials": { cssVars: brandVars },
+  "tweet-card": { cssVars: brandVars },
+  stepper: { cssVars: brandVars },
+  "text-highlighter": { cssVars: brandVars },
+  "glare-card": { cssVars: brandVars },
+  "direction-aware-hover": { cssVars: brandVars },
+  "container-scroll": { cssVars: brandVars },
+  "tracing-beam": { cssVars: brandVars },
+  "sticky-scroll": { cssVars: brandVars },
+  "file-drop": { cssVars: brandVars },
+};
+
+// shadcn/ui primitives a component imports, so the CLI installs them too.
+const uiImports = (slug) => [
+  ...new Set(
+    [
+      ...readFileSync(resolve(root, "src/components/velora", `${slug}.tsx`), "utf8").matchAll(
+        /from "@\/components\/ui\/([\w-]+)"/g
+      ),
+    ].map((m) => m[1])
+  ),
+];
+
+const items = meta.map((c) => ({
+  name: c.slug,
+  type: "registry:ui",
+  title: c.title,
+  description: c.description,
+  dependencies: c.dependencies.length ? c.dependencies : undefined,
+  // Every component imports cn() from @/lib/utils.
+  registryDependencies: ["utils", ...uiImports(c.slug)],
+  files: [
+    {
+      path: `src/components/velora/${c.slug}.tsx`,
+      type: "registry:ui",
+      target: `components/velora/${c.slug}.tsx`,
+    },
+  ],
+  ...(extras[c.slug] ?? {}),
+}));
+
+// Blocks: full sections. Their Velora components are pulled in by URL so a
+// single `shadcn add` installs everything the section needs.
+// Pro blocks are previewed on the site but never published to the public
+// registry or given install commands; their source ships in the Pro download.
+const allBlocks = JSON.parse(
+  readFileSync(resolve(root, "src/lib/blocks-meta.json"), "utf8")
+);
+const blocks = allBlocks.filter((b) => !b.pro);
+const proBlocks = allBlocks.filter((b) => b.pro);
+const blockCategories = JSON.parse(
+  readFileSync(resolve(root, "src/content/block-categories.json"), "utf8")
+);
+
+const blockItems = blocks.map((b) => ({
+  name: b.slug,
+  type: "registry:block",
+  title: b.title,
+  description: b.description,
+  categories: [b.category],
+  dependencies: b.dependencies.length ? b.dependencies : undefined,
+  registryDependencies: [
+    "utils",
+    ...b.ui,
+    ...b.components.map((c) => `${HOMEPAGE}/r/${c}.json`),
+  ],
+  files: [
+    {
+      path: b.file,
+      type: "registry:component",
+      target: `components/blocks/${b.slug}.tsx`,
+    },
+  ],
+}));
+
+const registry = {
+  $schema: "https://ui.shadcn.com/schema/registry.json",
+  name: "velora",
+  homepage: HOMEPAGE,
+  items: [...items, ...blockItems],
+};
+
+writeFileSync(
+  resolve(root, "registry.json"),
+  JSON.stringify(registry, null, 2) + "\n"
+);
+
+// ---------------------------------------------------------------------------
+// llms.txt — lets AI agents discover and install Velora components.
+// ---------------------------------------------------------------------------
+
+let stats = {};
+try {
+  stats = JSON.parse(
+    readFileSync(resolve(root, "src/lib/component-stats.json"), "utf8")
+  );
+} catch {
+  // stats file is generated by scripts/component-stats.mjs; optional here
+}
+
+const receipt = (slug) => {
+  const s = stats[slug];
+  if (!s) return "";
+  const deps = s.deps.length === 0 ? "zero deps" : `deps: ${s.deps.join(", ")}`;
+  return ` (${(s.gzip / 1024).toFixed(1)} KB gzipped, ${deps})`;
+};
+
+const llms = `# Velora UI
+
+> Free, MIT-licensed animated React components and complete multi-page landing
+> templates. Built with Next.js, Tailwind CSS 4, shadcn/ui and Motion.
+> Components are primitive-agnostic: they work in Base UI (shadcn default) and
+> Radix projects alike. Every component respects prefers-reduced-motion and
+> publishes its gzipped size and dependency count.
+
+Install any component with the shadcn CLI:
+
+    npx shadcn@latest add ${HOMEPAGE}/r/<name>.json
+
+## Components
+
+${meta
+  .map(
+    (c) => `- [${c.title}](${HOMEPAGE}/components/${c.slug}): ${c.description}${receipt(c.slug)} Install: \`npx shadcn@latest add ${HOMEPAGE}/r/${c.slug}.json\``
+  )
+  .join("\n")}
+
+## Blocks
+
+Complete sections built from the components above. Installing a block also installs every component it uses.
+
+${blockCategories
+  .filter((cat) => blocks.some((b) => b.category === cat.slug))
+  .map(
+    (cat) => `### ${cat.title}
+
+${blocks
+  .filter((b) => b.category === cat.slug)
+  .map(
+    (b) => `- [${b.title}](${HOMEPAGE}/blocks/${cat.slug}#${b.slug}): ${b.description} Install: \`npx shadcn@latest add ${HOMEPAGE}/r/${b.slug}.json\``
+  )
+  .join("\n")}`
+  )
+  .join("\n\n")}
+
+${
+  proBlocks.length
+    ? `## Velora Pro blocks
+
+Application blocks for dashboards and SaaS apps (${proBlocks.length} blocks). Previews are public; the source is part of Velora Pro and is not in the public registry.
+
+${blockCategories
+  .filter((cat) => cat.pro && proBlocks.some((b) => b.category === cat.slug))
+  .map((cat) => `- [${cat.title}](${HOMEPAGE}/blocks/${cat.slug}): ${cat.description}`)
+  .join("\n")}
+
+`
+    : ""
+}## Pages
+
+- [Components](${HOMEPAGE}/components): All components with live previews, install commands and source.
+- [Blocks](${HOMEPAGE}/blocks): Free sections — heroes, features, pricing, testimonials, CTAs and more.
+- [llms-full.txt](${HOMEPAGE}/llms-full.txt): This index plus props, accessibility notes and a working example for every component.
+- [Themes](${HOMEPAGE}/themes): Brand ramp presets — rebrand every effect by copying seven CSS variables.
+- [Pricing](${HOMEPAGE}/pricing): Components and marketing sections free (MIT); Velora Pro adds ${proBlocks.length} application blocks, one-time payment.
+- [Blog](${HOMEPAGE}/blog): Engineering notes and announcements (MDX pipeline is part of the free template).
+- [Changelog](${HOMEPAGE}/changelog): Every release, documented.
+- Template pages included free: about, contact, login, signup, blog, changelog, 404.
+`;
+
+writeFileSync(resolve(root, "public/llms.txt"), llms);
+
+// ---------------------------------------------------------------------------
+// llms-full.txt — the whole catalogue in one file: install command, props,
+// accessibility notes and a working example for every component.
+// ---------------------------------------------------------------------------
+
+let props = {};
+try {
+  props = JSON.parse(readFileSync(resolve(root, "src/lib/component-props.json"), "utf8"));
+} catch {
+  // generated by scripts/build-docs.mjs
+}
+
+const propsSection = (slug) =>
+  (props[slug]?.components ?? [])
+    .map((c) => {
+      const rows = c.props.map(
+        (p) =>
+          `- \`${p.name}${p.required ? "" : "?"}: ${p.type}\`` +
+          (p.default ? ` (default \`${p.default}\`)` : "") +
+          (p.description ? ` — ${p.description}` : "")
+      );
+      const ext = c.extends.length ? [`- …and every \`${c.extends.join("`, `")}\` prop`] : [];
+      return [`#### ${c.name}`, ...rows, ...ext].join("\n");
+    })
+    .join("\n\n");
+
+const exampleOf = (slug) => {
+  try {
+    return readFileSync(
+      resolve(root, "src/content/components", slug, "examples", "default.tsx"),
+      "utf8"
+    ).trimEnd();
+  } catch {
+    return "";
+  }
+};
+
+const fullComponents = meta
+  .map((c) => {
+    const a11y = c.a11y
+      ? `\n**Accessibility**\n- Reduced motion: ${c.a11y.motion}\n- Keyboard: ${c.a11y.keyboard ?? "Decorative; nothing to operate."}\n- Screen readers: ${c.a11y.screenReader}\n`
+      : "";
+    const example = exampleOf(c.slug);
+    return `### ${c.title}
+
+${c.description}${receipt(c.slug)}
+
+- Docs: ${HOMEPAGE}/components/${c.slug}
+- Category: ${c.category}
+- Install: \`npx shadcn@latest add ${HOMEPAGE}/r/${c.slug}.json\` (creates \`components/velora/${c.slug}.tsx\`)
+${a11y}
+**Props**
+
+${propsSection(c.slug) || "No props beyond the element's own attributes."}
+${example ? `\n**Example**\n\n\`\`\`tsx\n${example}\n\`\`\`\n` : ""}`;
+  })
+  .join("\n\n");
+
+const fullBlocks = blocks
+  .map(
+    (b) => `### ${b.title}
+
+${b.description}
+
+- Preview: ${HOMEPAGE}/blocks/${b.category}#${b.slug}
+- Install: \`npx shadcn@latest add ${HOMEPAGE}/r/${b.slug}.json\` (creates \`components/blocks/${b.slug}.tsx\` and installs ${b.components.length ? b.components.join(", ") : "no Velora components"})`
+  )
+  .join("\n\n");
+
+writeFileSync(
+  resolve(root, "public/llms-full.txt"),
+  `# Velora UI — full documentation
+
+> Free, MIT-licensed animated React components and complete sections (blocks) for
+> Tailwind CSS 4 and shadcn/ui. ${meta.length} components, ${blocks.length} blocks. Every
+> component respects prefers-reduced-motion and documents its keyboard and
+> screen-reader behavior. Components import only react, motion/react (some),
+> lucide-react (a few) and a cn() helper from @/lib/utils.
+
+Install any item with the shadcn CLI: \`npx shadcn@latest add ${HOMEPAGE}/r/<name>.json\`.
+Brand colors come from CSS variables (--brand, --brand-from, --brand-via, --brand-to)
+that the CLI adds to your globals.css.
+
+## Components
+
+${fullComponents}
+
+## Blocks
+
+${fullBlocks}
+`
+);
+
+console.log(`registry.json: ${items.length} components + ${blockItems.length} blocks, llms.txt written`);
