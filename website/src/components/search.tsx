@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import { blockCategories, blocksIn, blocksMeta } from "@/lib/blocks-meta";
-import { categories, componentsMeta, type ComponentMeta } from "@/lib/components-meta";
+import { events, componentsMeta, type ComponentMeta } from "@/lib/components-meta";
 
 const blockGroups = blockCategories.filter((c) => blocksIn(c.slug).length);
 
@@ -182,7 +182,7 @@ export function Search() {
             </>
           ) : (
             <>
-              {categories.map((category) => (
+              {events.map((category) => (
                 <Command.Group key={category} heading={category}>
                   {componentsMeta.filter((c) => c.category === category).map(componentItem)}
                 </Command.Group>

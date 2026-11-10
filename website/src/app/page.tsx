@@ -56,7 +56,7 @@ import { OrbitingCircles } from "@/components/velora/orbiting-circles";
 import { blocksMeta, freeBlocks, proBlocks } from "@/lib/blocks-meta";
 import componentStats from "@/lib/component-stats.json";
 import {
-  categories,
+  events,
   categorySlug,
   componentsMeta,
 } from "@/lib/components-meta";
@@ -97,23 +97,8 @@ const installSteps = [
 ];
 const INSTALL = "npx shadcn@latest add @velora/marquee";
 
-const categoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-  Backgrounds: WavesIcon,
-  Text: TypeIcon,
-  Buttons: MousePointerClickIcon,
-  "Cards & Layout": LayoutGridIcon,
-  Navigation: MenuIcon,
-  Forms: TextCursorInputIcon,
-  Overlays: AppWindowIcon,
-  Loaders: LoaderIcon,
-  "Social Proof": MessageSquareQuoteIcon,
-  Scroll: ChevronsDownIcon,
-  Effects: SparklesIcon,
-  "3D": BoxIcon,
-  Carousels: GalleryHorizontalIcon,
-  "Cursor & Pointer": MousePointer2Icon,
-  "Data & Maps": GlobeIcon,
-  Mockups: MonitorSmartphoneIcon,
+const categoryIcons: Record<string, string> = {
+  "IPSD V5 Robotics Invitational": "https://events.vex.com/robot-competitions/vex-robotics-competition/VE-V5-26-66342.html#general-info",
 };
 
 const featuredBlocks = [
@@ -290,9 +275,9 @@ export default function Home() {
         data={[
           {
             "@type": "WebSite",
-            name: siteConfig.name,
-            url: siteConfig.url,
-            description: siteConfig.description,
+            name: "8995 Riptide",
+            url: "https://8995riptide.vercel.app",
+            description: "The website for all things 8995 Riptide",
             publisher,
           },
           { ...publisher, sameAs: [siteConfig.github] },
@@ -396,39 +381,32 @@ export default function Home() {
         </section>
 
         {/* Categories */}
-        <section aria-labelledby="categories" className="py-14 lg:py-20">
+        <section aria-labelledby="events" className="py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <SectionHeading
-                id="categories"
-                eyebrow="Components"
-                title={`${categories.length} categories`}
+                id="events"
+                eyebrow="Events"
+                title={`${events.length} events`}
               />
 
             </div>
             <ul className="mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
-              {categories.map((category) => {
-                const count = componentsMeta.filter((c) => c.category === category).length;
-                const Icon = categoryIcons[category] ?? SparklesIcon;
+              {events.map((event) => {
+                const link = categoryIcons[event];
                 return (
                   <li
-                    key={category}
+                    key={event}
                     className="group/card relative flex items-center gap-3 rounded-xl border bg-card/50 p-3 transition-colors focus-within:ring-2 focus-within:ring-ring hover:border-primary/40"
                   >
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover/card:bg-primary/15">
-                      <Icon className="size-4.5" />
-                    </span>
                     <h3 className="min-w-0 flex-1 truncate text-sm font-medium">
                       <Link
-                        href={`/components/category/${categorySlug(category)}`}
+                        href={link}
                         className="outline-none after:absolute after:inset-0 after:rounded-xl"
                       >
-                        {category}
+                        {event}
                       </Link>
                     </h3>
-                    <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 font-mono text-xs text-foreground tabular-nums">
-                      {count}
-                    </span>
                   </li>
                 );
               })}
