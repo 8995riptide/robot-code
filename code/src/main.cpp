@@ -313,7 +313,9 @@ void initialize() {
     master.print(2, 0, "Plug in the controller now!");
     pros::delay(2000);
     master.clear();
-    autonomous();
+    while (true) {
+pros::delay(50);
+}
 }
 void opcontrol() {
     master.print(0, 0, "opcontrol begun!");
