@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import type { MetadataRoute } from "next";
 
 import { blockCategories, blocksIn } from "@/lib/blocks-meta";
-import { categories, categorySlug, componentsMeta } from "@/lib/components-meta";
+import { categorySlug, componentsMeta } from "@/lib/components-meta";
 import { comparisons } from "@/content/compare";
 import { proTemplates } from "@/content/pro-templates";
 import { blogPosts } from "@/lib/blog-posts";
@@ -66,15 +66,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const componentCategoryPages = categories.map((category) => ({
-    url: `${BASE}/components/category/${categorySlug(category)}`,
-    lastModified: latest(
-      componentsMeta.filter((c) => c.category === category).map((c) => componentDates[c.slug])
-    ),
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
-
   const blockPages = blockCategories
     .filter((c) => blocksIn(c.slug).length)
     .map((c) => ({
@@ -111,7 +102,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticPages,
     ...templatePages,
     ...blockPages,
-    ...componentCategoryPages,
     ...componentPages,
     ...comparePages,
     ...postPages,
