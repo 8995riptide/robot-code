@@ -2,11 +2,17 @@
 #include "lemlib/api.hpp"
 #include "pros/apix.h"
 #include <random>
+#define EXAMPLE_SIG 1
 	pros::MotorGroup right_mg({1, 3}, pros::MotorGearset::green);    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup left_mg({-4, -6}, pros::MotorGearset::green);  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor claw(-7);
     pros::MotorGroup lift({-8, -5}, pros::MotorGearset::red);
     pros::Motor roller(2);
+    pros::Vision vision_sensor (9);
+    pros::vision_signature_s_t RED_SIG =
+    pros::Vision::signature_from_utility(EXAMPLE_SIG, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
+        pros::vision_signature_s_t BLUE_SIG =
+    pros::Vision::signature_from_utility(EXAMPLE_SIG, 2, -4479, -3277, -3878, 5869, 7509, 6689, 2.5);
     pros::Controller master(pros::E_CONTROLLER_MASTER);
 	lemlib::Drivetrain drivetrain(&left_mg,
                               &right_mg,
@@ -120,16 +126,16 @@ void autonomous() {
     pros::delay(50);
     master.rumble(".");
     claw.move(100);
-	lift.move_relative(18.5, 100);
     chassis.moveToPoint(0, -6, 1000);
+    roller.move_relative(360, 100);
+    lift.move(127);
     if (auton_selection == 1) {
-    chassis.moveToPoint(24, 12, 4000);
+        chassis.moveToPoint(6, 12, 4000);
     } else if (auton_selection == 2) {
-        chassis.moveToPoint(-24, 12, 4000);
+        chassis.moveToPoint(-6, 12, 4000);
     }
-    lift.move_relative(-18.5, 100);
-    claw.move(0);
-    claw.move_relative(90, 100);
+    lift.move(-50);
+    claw.move(-50);
     master.clear();
     pros::delay(50);
     master.print(0, 0, "Auton done!");
