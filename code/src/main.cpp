@@ -6,6 +6,7 @@
 	pros::MotorGroup left_mg({-4, -6}, pros::MotorGearset::green);  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor claw(-7);
     pros::MotorGroup lift({-8, -5}, pros::MotorGearset::red);
+    pros::Motor roller(2);
     pros::Controller master(pros::E_CONTROLLER_MASTER);
 	lemlib::Drivetrain drivetrain(&left_mg,
                               &right_mg,
@@ -199,10 +200,17 @@ void initialize() {
         master.rumble("-");
         flags = 1;
     }
+    if (roller.get_flags() & pros::E_MOTOR_FLAGS_BUSY) {
+        pros::delay(50);
+        master.print(2, 0, "Port %d disconnected", roller.get_port());
+        pros::delay(50);
+        master.rumble("-");
+        flags = 1;
+    }
     pros::delay(100);
-    // while (flags == 1) {
-        // pros::delay(100);
-    // }
+    while (flags == 1) {
+        pros::delay(100);
+    }
     master.print(2, 0, " Starting ROBOS...");
     pros::delay(500);
     master.clear();
@@ -315,6 +323,8 @@ void opcontrol() {
         int l2 = master.get_digital(DIGITAL_L2);
         int x = master.get_digital(DIGITAL_X);
         int y = master.get_digital(DIGITAL_Y);
+        int r1 = master.get_digital(DIGITAL_R1);
+        int r2 = master.get_digital(DIGITAL_R2);
         lift.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
         if (master.get_digital_new_press(DIGITAL_LEFT)) {
             drive_selection = 2;
@@ -333,10 +343,18 @@ void opcontrol() {
         } else if (l2) {
             lift.move_velocity(0);
         }
+
         if (x) {
             claw.move(127);
         } else if (y) {
             claw.move(-50);
+        }
+        if (r1) {
+            roller.move(127);
+        } else if (r2) {
+            roller.move(-127);
+        } else {
+            roller.move(0);
         }
 		pros::delay(20);                               // Run for 20 ms then update
             }
