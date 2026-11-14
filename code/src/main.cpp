@@ -2,17 +2,13 @@
 #include "lemlib/api.hpp"
 #include "pros/apix.h"
 #include <random>
+#include <cstdio>
 #define EXAMPLE_SIG 1
 	pros::MotorGroup right_mg({1, 3}, pros::MotorGearset::green);    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup left_mg({-4, -6}, pros::MotorGearset::green);  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor claw(-7);
     pros::MotorGroup lift({-8, -5}, pros::MotorGearset::red);
     pros::Motor roller(2);
-    pros::Vision vision_sensor (9);
-    pros::vision_signature_s_t RED_SIG =
-    pros::Vision::signature_from_utility(EXAMPLE_SIG, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
-        pros::vision_signature_s_t BLUE_SIG =
-    pros::Vision::signature_from_utility(EXAMPLE_SIG, 2, -4479, -3277, -3878, 5869, 7509, 6689, 2.5);
     pros::Controller master(pros::E_CONTROLLER_MASTER);
 	lemlib::Drivetrain drivetrain(&left_mg,
                               &right_mg,
@@ -68,7 +64,48 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
  * to keep execution time for this mode under a few seconds.
  */
 
-
+void save_auton(int selection) {
+    if (pros::usd::is_installed()) {
+        FILE* file = fopen("/usd/auton_selection.txt", "w");
+        if (file != nullptr) {
+            fprintf(file, "%d", selection);
+            fclose(file);
+        }
+    }
+}
+void save_drive(int selection) {
+    if (pros::usd::is_installed()) {
+        FILE* file = fopen("/usd/drive_selection.txt", "w");
+        if (file != nullptr) {
+            fprintf(file, "%d", selection);
+            fclose(file);
+        }
+    }
+}
+int get_auton() {
+    if (pros::usd::is_installed()) {
+        FILE* file = fopen("/usd/auton_selection.txt", "r");
+        if (file != nullptr) {
+            int selection;
+            fscanf(file, "%d", &selection);
+            fclose(file);
+            return selection;
+        }
+    }
+    return 0;
+}
+int get_drive() {
+    if (pros::usd::is_installed()) {
+        FILE* file = fopen("/usd/drive_selection.txt", "r");
+        if (file != nullptr) {
+            int selection;
+            fscanf(file, "%d", &selection);
+            fclose(file);
+            return selection;
+        }
+    }
+    return 0;
+}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -85,10 +122,9 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-int auton_selection = 0;
-int drive_selection = 0;
+
 void competition_initialize() {
-    while (auton_selection == 0 | drive_selection == 0) {
+    while (get_auton() == 0 || get_drive() == 0) {
         master.clear();
         pros::delay(50);
         master.print(0, 0, "Selections have not been configured!");
@@ -105,8 +141,11 @@ void competition_initialize() {
     master.clear();
     pros::delay(50);
     master.print(0, 0, "Controller plugged in,");
+    pros::delay(50);
     master.print(1, 0, "All systems calibrated,");
+    pros::delay(50);
     master.print(2, 0, "ready to go!");
+    pros::delay(50);
 
 }
 
@@ -129,9 +168,9 @@ void autonomous() {
     chassis.moveToPoint(0, -6, 1000);
     roller.move_relative(360, 100);
     lift.move(127);
-    if (auton_selection == 1) {
+    if (get_auton() == 1) {
         chassis.moveToPoint(6, 12, 4000);
-    } else if (auton_selection == 2) {
+    } else if (get_auton() == 2) {
         chassis.moveToPoint(-6, 12, 4000);
     }
     lift.move(-50);
@@ -262,7 +301,7 @@ void initialize() {
             pros::delay(10);
         }
         if (master.get_digital(DIGITAL_RIGHT)) {
-            auton_selection = 1;
+            save_auton(1);
             master.clear();
             pros::delay(50);
             master.rumble(".");
@@ -270,7 +309,7 @@ void initialize() {
             master.print(0, 0, "Drive auton selected");
             pros::delay(50);
         } else if (master.get_digital(DIGITAL_LEFT)) {
-            auton_selection = 2;
+            save_auton(2);
             master.clear();
             pros::delay(50);
             master.rumble(".");
@@ -294,7 +333,7 @@ void initialize() {
             master.print(0, 0, "Tank drive selected");
             pros::delay(50);
             master.clear();
-            drive_selection = 1;      
+            save_drive(1);      
     } else if (master.get_digital(DIGITAL_LEFT)) {
             master.clear();
             pros::delay(50);
@@ -303,7 +342,7 @@ void initialize() {
             master.print(0, 0, "Arcade drive selected");
             pros::delay(50);
             master.clear();
-            drive_selection = 2;
+            save_drive(2);
 }
     pros::delay(50);
     master.print(0, 0, "Configuration done");
@@ -333,15 +372,15 @@ void opcontrol() {
         int r2 = master.get_digital(DIGITAL_R2);
         lift.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
         if (master.get_digital_new_press(DIGITAL_LEFT)) {
-            drive_selection = 2;
+            save_drive(2);
             master.rumble(".");
         } else if (master.get_digital_new_press(DIGITAL_RIGHT)) {
-            drive_selection = 1;
+            save_drive(1);
             master.rumble(".");
         }
-        if (drive_selection == 1) {
+        if (get_drive() == 1) {
             chassis.tank(throttle, throttle2);
-        } else if (drive_selection == 2) {
+        } else if (get_drive() == 2) {
             chassis.arcade(throttle, turn);
         }
         if (l1) {
