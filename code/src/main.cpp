@@ -50,20 +50,6 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
                         sensors // odometry sensors
 );
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-
-/**
- * Runs initialization code. This occurs as soon as the program is started.
- *
- * All other competition modes are blocked by initialize; it is recommended
- * to keep execution time for this mode under a few seconds.
- */
-
 void save_auton(int selection) {
     if (pros::usd::is_installed()) {
         FILE* file = fopen("/usd/auton_selection.txt", "w");
@@ -122,7 +108,8 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-
+int auton_selection;
+int drive_selection;
 void competition_initialize() {
     while (get_auton() == 0 || get_drive() == 0) {
         master.clear();
@@ -138,6 +125,8 @@ void competition_initialize() {
     }
     chassis.calibrate();  // Calibrates the IMU and tracking wheels. This should be called in the initialize function
 	chassis.setPose(0, 0, 0);
+    auton_selection = get_auton();
+    drive_selection = get_drive();
     master.clear();
     pros::delay(50);
     master.print(0, 0, "Controller plugged in,");
@@ -168,9 +157,9 @@ void autonomous() {
     chassis.moveToPoint(0, -6, 1000);
     roller.move_relative(360, 100);
     lift.move(127);
-    if (get_auton() == 1) {
+    if (auton_selection == 1) {
         chassis.moveToPoint(6, 12, 4000);
-    } else if (get_auton() == 2) {
+    } else if (auton_selection == 2) {
         chassis.moveToPoint(-6, 12, 4000);
     }
     lift.move(-50);
@@ -374,15 +363,15 @@ void opcontrol() {
         int r2 = master.get_digital(DIGITAL_R2);
         lift.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
         if (master.get_digital_new_press(DIGITAL_LEFT)) {
-            save_drive(2);
+            drive_selection = 2;
             master.rumble(".");
         } else if (master.get_digital_new_press(DIGITAL_RIGHT)) {
-            save_drive(1);
+            drive_selection = 1;
             master.rumble(".");
         }
-        if (get_drive() == 1) {
+        if (drive_selection == 1) {
             chassis.tank(throttle, throttle2);
-        } else if (get_drive() == 2) {
+        } else if (drive_selection == 2) {
             chassis.arcade(throttle, turn);
         }
         if (l1) {
