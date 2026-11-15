@@ -428,20 +428,7 @@ export default function Home() {
   url="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/drivetrain-Assembly.glb"
   width={260}
   height={160}
-  environment="studio"
-  environmentIntensity={1}
-  exposure={1}
-  dragRotate
-  turntable={false}
-  zoom
-  hoverTilt={0.15}
-  float={0.3}
   autoRotate={false}
-  shadow
-  shadowOpacity={0.45}
-  fit={0.8}
-  offsetX={0}
-  offsetY={0}
   resetOnDoubleClick
 />
     </div>
@@ -467,22 +454,6 @@ export default function Home() {
   url="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/dr4bp1-Assembly.glb"
   width={260}
   height={160}
-  environment="studio"
-  environmentIntensity={1}
-  exposure={1}
-  intro="rise"
-  dragRotate
-  turntable={false}
-  zoom
-  hoverTilt={0.15}
-  float={0.3}
-  shadow
-  shadowOpacity={0.45}
-  fit={0.8}
-  offsetX={0}
-  offsetY={0}
-  startAngle={-35}
-  tilt={12}
   autoRotate={false}
   resetOnDoubleClick
 />
