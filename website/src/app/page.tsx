@@ -411,14 +411,7 @@ export default function Home() {
         <section aria-labelledby="blocks" className="py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <SectionHeading id="blocks" eyebrow="Blocks" title="Whole sections, free" />
-              <Link
-                href="/blocks"
-                className="inline-flex h-10 items-center gap-1.5 rounded-full border bg-background px-5 text-sm font-medium transition-colors hover:bg-muted"
-              >
-                {freeBlocks.length} free blocks
-                <ArrowRightIcon className="size-4" />
-              </Link>
+              <SectionHeading id="blocks" eyebrow="CAD" title="Our CAD models, free" />
             </div>
             <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <li
@@ -430,8 +423,8 @@ export default function Home() {
       className="relative aspect-[16/10] overflow-hidden bg-background"
     >
       <iframe
-        src="https://3dviewer.net/embed.html#model=https://cdn.jsdelivr.net/gh/8995riptide/robot-code@latest/designs/dr4bp1-Assembly.step$camera=-277.24256,601.36328,640.06036,30.83373,190.59488,23.90777,0.00000,1.00000,0.00000,45.00000$projectionmode=perspective$envsettings=fishermans_bastion,off$backgroundcolor=255,255,255,255$defaultcolor=200,200,200$defaultlinecolor=100,100,100$edgesettings=off,0,0,0,1"
-        width="640" height="480"
+        src="https://3dviewer.net/embed.html#model=https://cdn.jsdelivr.net/gh/8995riptide/robot-code@latest/designs/dr4bp1-Assembly.step"
+        width="260" height="160"
         className="absolute top-0 left-0 origin-top-left"
       />
     </div>
@@ -441,7 +434,7 @@ export default function Home() {
                       <Link href="https://3dviewer.net/#model=https://cdn.jsdelivr.net/gh/8995riptide/robot-code@latest/designs/dr4bp1-Assembly.step">
                         DR4B CAD
                       </Link>
-                    </h3>
+                    </h3> 
                   </div>
                 </li>
             </ul>
