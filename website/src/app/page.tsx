@@ -431,7 +431,6 @@ export default function Home() {
   environment="studio"
   environmentIntensity={1}
   exposure={1}
-  intro="rise"
   dragRotate
   turntable={false}
   zoom
@@ -442,15 +441,15 @@ export default function Home() {
   fit={0.8}
   offsetX={0}
   offsetY={0}
-  startAngle={-35}
-  tilt={12}
   resetOnDoubleClick
 />
     </div>
                   </div>
                   <div className="p-4">
                     <h3 className="text-sm font-medium">
+                      <Link href="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/drivetrain-Assembly.glb">
                         Drivetrain CAD
+                        </Link>
                     </h3> 
                   </div>
                 </li>
@@ -489,7 +488,9 @@ export default function Home() {
                   </div>
                   <div className="p-4">
                     <h3 className="text-sm font-medium">
+                      <Link href="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/dr4bp1-Assembly.glb">
                         DR4B CAD
+                      </Link>
                     </h3> 
                   </div>
                 </li>
