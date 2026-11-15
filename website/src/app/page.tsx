@@ -429,12 +429,9 @@ export default function Home() {
   width={260}
   height={160}
   environment="studio"
-  autoRotate
   environmentIntensity={1}
   exposure={1}
   intro="rise"
-  autoRotateSpeed={0.4}
-  autoRotateDelay={2}
   dragRotate
   turntable={false}
   zoom
@@ -471,12 +468,9 @@ export default function Home() {
   width={260}
   height={160}
   environment="studio"
-  autoRotate
   environmentIntensity={1}
   exposure={1}
   intro="rise"
-  autoRotateSpeed={0.4}
-  autoRotateDelay={2}
   dragRotate
   turntable={false}
   zoom
