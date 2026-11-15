@@ -1,17 +1,22 @@
-# Week 1
+---
+title: Week 1 Overview
+summary: Week 1 Overview
+week: 1
+---
 ## First Design Ideas
-### Lift design
-After searching through others designs and looking through design ideas we decided on a couple of options. For the lift we were debating on using a double reverse 4 bar or a cascade 2 bar. The double reverse four bar would provide the stability needed to safely and consistently deliver the pin and win points but, the DR4B is very heavy and would slow down the bot. Meanwhile the cascade 2 bar is lightweight and has a wide range of motion leading to us picking the cascade 2 bar.
-### Drive train
-For the drive train we decided on placing two omnis in the front and two omnis in the back with two rubber wheels in the middle. 4 motors are attached to the omnis. This was done so the robot can turn easily. The downside is that people could push our bot from all sides.
-### Claw mechanics+toggles
-For the toggles we decided to connect to stand offs to a vertical bar which we can then use the robot to push at the toggle system. Lastly, for the claw, we decided on using pneumatics and making a claw that can go 360 degrees and opens and closes on both sides using a motor. Although not all of the details are figured out, to construct this we need to order the vex v5 claw kit.
-## CAD Pics
-### Toggle system 
-![alt text](<pics/Screenshot 2026-10-15 5.20.34 PM.png>) 
-### Overview of different parts combined
-![alt text](<pics/Screenshot 2026-10-15 9.42.18 PM.png>) 
-### Close up of the claw
-![alt text](<pics/Screenshot 2026-10-15 9.42.30 PM.png>) 
-### Close up of the drive train
-![alt text](<pics/Screenshot 2026-10-15 9.42.55 PM.png>) 
+
+### Overview of Ideas for this week  
+This week has been all about addressing parts or the robot and what functions the robot needs to be able to score. Main ways of scoring include stacking cups and pins onto coals, toggling and auton. To be able to do anything the bot needs some type of drive train. To stack cups, or bot must be able to reach large heights. For that we need some type of lift. Not only that but for toggles, the bot must be able to push the toggles and move them to the color wanted efficiently. To hold and collect pins from the dispenser, the bot must have some type of claw and some type of intake. We also have been finding out that we need to make a bulk part order of c-chanels and other parts to start building because we have none.
+
+### Lift Ideas \+ Future Plans
+
+For the lift we were deciding on creating either a double reverse 4 bar or a cascade 2 bar. 
+
+|  | Pros | Cons |
+| :---- | :---- | :---- |
+| DR4B | 1\. It would be really stable and wouldn’t shake much 2\. We have experience making it 3\. We have most of the pieces needed to build it 4\. It wouldn’t take as much time to build  | 1\. It is very heavy and would make our bot a lot slower 2\. We would need a lot of c-chanels to achieve the same height as the cascade would 3\. The only type of c-chanels we have are steel currently |
+| Cascade 2 Bar | 1\. It is very lightweight 2\. It is very reliable 3\. It can become very compact helping with the height and width requirements 4\. It has a wide range for picking up cups+pins | 1\. None of us have built one before 2\. We do not have matching c-chanels  3\. It would take more time to build than the DR4B |
+
+In the end we decided on building a Cascde 2 Bar but we haven’t started the building process yet.
+
+### Drivetrain Ideas \+ Future Plans

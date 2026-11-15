@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
-
+import { withContentCollections } from "@content-collections/next";
 const nextConfig: NextConfig = {
   // Fully static site — export to `out/` for Cloudflare Pages (static assets,
   // no Worker runtime). Every route is prerendered.
@@ -10,4 +10,4 @@ const nextConfig: NextConfig = {
 
 const withMDX = createMDX({});
 
-export default withMDX(nextConfig);
+export default withContentCollections(withMDX(nextConfig));

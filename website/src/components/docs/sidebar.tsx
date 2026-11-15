@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import {
-  categories,
+  events,
   categorySlug,
   componentsMeta,
   isNew,
@@ -52,7 +52,7 @@ export function DocsSidebar() {
           </li>
         ))}
       </ul>
-      {categories.map((category) => {
+      {events.map((category) => {
         const href = `/components/category/${categorySlug(category)}`;
         return (
           <div key={category}>

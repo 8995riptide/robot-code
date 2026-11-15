@@ -64,6 +64,7 @@ import { JsonLd, publisher } from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import { AnimatedList } from "@/components/velora/animated-list";
+import MarkdownDisplay from "@/components/blocks/markdown-display";
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
@@ -87,12 +88,12 @@ const marqueeRows = [
 const REGISTRY = `${siteConfig.url}/r/{name}.json`;
 const installSteps = [
   {
-    title: "1. Register the namespace",
-    command: `npx shadcn@latest registry add @velora=${REGISTRY}`,
+    title: "1. Clone the repo",
+    command: `git clone ${siteConfig.github}`,
   },
   {
-    title: "2. Add a component or a block",
-    command: "npx shadcn@latest add @velora/marquee @velora/hero-globe",
+    title: "2. Explore the repository",
+    command: "cd robot-code",
   },
 ];
 const INSTALL = "npx shadcn@latest add @velora/marquee";
@@ -268,7 +269,7 @@ export default function Home() {
       ],
     },
   ];
-
+  const FRAME_WIDTH = 1280;
   return (
     <>
       <JsonLd
@@ -336,24 +337,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Stack strip */}
-        <section aria-label="Built on" className="border-y border-border/40 py-12">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <p className="mb-8 text-center text-sm text-muted-foreground">
-              Built on the stack you already ship
-            </p>
-            <Marquee pauseOnHover className="[--duration:30s]">
-              {stackNames.map((name) => (
-                <StackLogo
-                  key={name}
-                  name={name}
-                  className="mx-8 text-lg font-semibold tracking-tight text-muted-foreground transition-colors hover:text-foreground"
-                />
-              ))}
-            </Marquee>
-          </div>
-        </section>
-
         {/* Stats */}
         <section aria-label="Velora in numbers" className="px-4 py-14 lg:px-8" id="stats">
           <div className="flex flex-wrap items-end justify-between gap-4 mx-auto max-w-6xl gap-px lg:grid-cols-4 gap-15 p-5">
@@ -368,9 +351,9 @@ export default function Home() {
             
             {[
               { value: 1, label: "events" },
-              { value: 4, label: "matches" },
-              { value: 1.5, label: "Avg WP / Match" },
-              { value: "75%", label: "Win Rate" },
+              { value: "5-3-0", label: "matches" },
+              { value: 1.3, label: "Avg WP / Match" },
+              { value: "63%", label: "Win Rate" },
             ].map((s) => (
               <div key={s.label} className="flex flex-col-reverse gap-1 bg-background p-6 lg:p-8">
                 <dt className="text-sm text-muted-foreground">{s.label}</dt>
@@ -413,7 +396,17 @@ export default function Home() {
             </ul>
           </div>
         </section>
+                <section aria-label="Notes" className="px-4 py-14 lg:px-8" id="stats">
+          <div className="flex flex-wrap items-end justify-between gap-4 mx-auto max-w-6xl gap-px lg:grid-cols-4 gap-15 p-5">
+              <SectionHeading
+                id="notes"
+                eyebrow="Engineering Notebook"
+                title="Our Engineering Notebook"
+              />
 
+            </div>
+        <MarkdownDisplay />
+        </section>
         {/* Blocks */}
         <section aria-labelledby="blocks" className="py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
@@ -428,70 +421,37 @@ export default function Home() {
               </Link>
             </div>
             <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {featuredBlocks.map((block) => (
                 <li
-                  key={block.slug}
                   className="group/card relative min-w-0 overflow-hidden rounded-2xl border bg-card/50 transition-all focus-within:ring-2 focus-within:ring-ring hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5"
                 >
                   <div className="border-b">
-                    <BlockThumbnail src={`/blocks/preview/${block.slug}`} />
+                        <div
+      aria-hidden
+      className="relative aspect-[16/10] overflow-hidden bg-background"
+    >
+      <iframe
+        src="https://3dviewer.net/embed.html#model=https://cdn.jsdelivr.net/gh/8995riptide/robot-code@latest/designs/dr4bp1-Assembly.step$camera=-277.24256,601.36328,640.06036,30.83373,190.59488,23.90777,0.00000,1.00000,0.00000,45.00000$projectionmode=perspective$envsettings=fishermans_bastion,off$backgroundcolor=255,255,255,255$defaultcolor=200,200,200$defaultlinecolor=100,100,100$edgesettings=off,0,0,0,1"
+        width="640" height="480"
+        className="absolute top-0 left-0 origin-top-left"
+      />
+    </div>
                   </div>
                   <div className="p-4">
                     <h3 className="text-sm font-medium">
-                      <Link
-                        href={`/blocks/${block.category}`}
-                        className="outline-none after:absolute after:inset-0"
-                      >
-                        {block.title}
+                      <Link href="https://3dviewer.net/#model=https://cdn.jsdelivr.net/gh/8995riptide/robot-code@latest/designs/dr4bp1-Assembly.step">
+                        DR4B CAD
                       </Link>
                     </h3>
                   </div>
                 </li>
-              ))}
             </ul>
           </div>
         </section>
-
-        {/* Why */}
-        <section aria-labelledby="why" className="py-14 lg:py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <SectionHeading id="why" eyebrow="Why Velora" title="Claims you can check" />
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {why.map((item) => (
-                <li key={item.label} className="flex flex-col rounded-2xl border bg-card/50 p-5">
-                  <item.icon className="size-5 text-primary" />
-                  <p className="mt-4 text-3xl font-semibold tracking-tight">{item.metric}</p>
-                  <p className="mt-1 flex-1 text-sm text-muted-foreground">{item.label}</p>
-                  <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-medium">
-                    {item.links.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
-                      >
-                        {link.label}
-                        {item.links.length === 1 && <ArrowRightIcon className="size-3.5" />}
-                      </Link>
-                    ))}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
         {/* Install */}
         <section aria-labelledby="install" className="py-14 lg:py-20">
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 lg:grid-cols-5 lg:gap-16 lg:px-8">
             <div className="lg:col-span-2">
-              <SectionHeading id="install" eyebrow="Install" title="Install in seconds" />
-              <Link
-                href="/components/get-started"
-                className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline"
-              >
-                Read the get started guide
-                <ArrowRightIcon className="size-4" />
-              </Link>
+              <SectionHeading id="Repo" eyebrow="Our repo" title="Install in seconds" />
             </div>
             <ol className="min-w-0 space-y-6 lg:col-span-3">
               {installSteps.map((step) => (
@@ -510,82 +470,6 @@ export default function Home() {
                 </li>
               ))}
             </ol>
-          </div>
-        </section>
-
-        {/* Pro teaser */}
-        <section aria-labelledby="pro" className="py-8">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="flex flex-col gap-4 rounded-2xl border bg-card/50 p-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
-              <div>
-                <h2 id="pro" className="flex flex-wrap items-center gap-2 font-semibold">
-                  Velora Pro
-                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs font-medium text-foreground">
-                    {siteConfig.pro.onSale ? "New" : "Coming soon"}
-                  </span>
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {proBlocks.length} app blocks, ${siteConfig.pro.personal.price} once. The library
-                  stays free.
-                </p>
-              </div>
-              <Link
-                href="/blocks"
-                className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-full border bg-background px-5 text-sm font-medium transition-colors hover:bg-muted"
-              >
-                See the blocks
-                <ArrowRightIcon className="size-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section aria-labelledby="faq" className="py-14 lg:py-20">
-          <div className="mx-auto max-w-3xl px-4 lg:px-8">
-            <h2 id="faq" className="text-center text-3xl font-semibold tracking-tight lg:text-4xl">
-              Questions, answered
-            </h2>
-            <Accordion type="single" collapsible className="mt-10">
-              {faqs.map((faq) => (
-                <AccordionItem key={faq.q} value={faq.q}>
-                  <AccordionTrigger className="text-left text-base">{faq.q}</AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground">{faq.a}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
-        </section>
-
-        {/* Final CTA */}
-        <section aria-labelledby="cta" className="relative overflow-hidden py-24 lg:py-32">
-          <GridPattern
-            width={48}
-            height={48}
-            className="fill-transparent stroke-border/60 mask-[radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]"
-          />
-          <div className="relative mx-auto max-w-3xl px-4 text-center lg:px-8">
-            <h2 id="cta" className="text-4xl font-semibold tracking-tight text-balance lg:text-5xl">
-              Pick a component. Run one command.{" "}
-              <span className="bg-linear-to-r from-brand-from via-brand-via to-brand-to bg-clip-text text-transparent">
-                Own the code.
-              </span>
-            </h2>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/components"
-                className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-medium text-background shadow-lg shadow-primary/20 transition-opacity hover:opacity-90"
-              >
-                Browse components
-                <ArrowRightIcon className="size-4" />
-              </Link>
-              <Link
-                href="/templates"
-                className="inline-flex h-11 items-center rounded-full border bg-background/60 px-6 text-sm font-medium transition-colors hover:bg-muted"
-              >
-                See the template
-              </Link>
-            </div>
           </div>
         </section>
       </main>

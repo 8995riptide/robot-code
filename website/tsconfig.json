@@ -21,7 +21,8 @@
     "paths": {
       "@/components/charts": ["./pro/components/charts"],
       "@pro/*": ["./pro/*"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "content-collections": ["./.content-collections/generated"]
     }
   },
   "include": [

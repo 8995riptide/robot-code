@@ -4,13 +4,13 @@
  * repo are wired up.
  */
 export const siteConfig = {
-  name: "Velora UI",
+  name: "8995 Riptide",
   url: (
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://velora.colorlib.com"
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://8995riptide.vercel.app"
   ).replace(/\/$/, ""),
   github:
     process.env.NEXT_PUBLIC_GITHUB_URL ??
-    "https://github.com/ColorlibHQ/velora-ui",
+    "https://github.com/8995riptide/robot-code",
   /** Velora Pro is sold through dashboardpack.com (WooCommerce product 393469). */
   pro: {
     /**
@@ -38,7 +38,7 @@ export const siteConfig = {
     },
     clubPass: "https://dashboardpack.com/lifetime-club-pass/",
   },
-  tagline: "Free animated React components & landing templates",
+  tagline: "The website for everything 8995Riptide",
   description:
-    "A free, MIT-licensed library of animated shadcn/ui components and complete landing page templates. Built with Next.js 16, Tailwind CSS 4 and Motion — accessible, reduced-motion friendly and light — most components weigh under 3 KB.",
+    "The official website for the 8995 Riptide robotics team, showcasing our projects, competitions, and engineering notes.",
 } as const;
