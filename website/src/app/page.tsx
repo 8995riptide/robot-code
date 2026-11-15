@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ModelViewer from '../components/ModelViewer';
 import {
   AccessibilityIcon,
   AppWindowIcon,
@@ -422,18 +423,79 @@ export default function Home() {
       aria-hidden
       className="relative aspect-[16/10] overflow-hidden bg-background"
     >
-      <iframe
-        src="https://3dviewer.net/embed.html#model=https://cdn.jsdelivr.net/gh/8995riptide/robot-code@latest/designs/dr4bp1-Assembly.step"
-        width="260" height="160"
-        className="absolute top-0 left-0 origin-top-left"
-      />
+      
+<ModelViewer
+  url="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/drivetrain-Assembly.glb"
+  width={260}
+  height={160}
+  environment="studio"
+  autoRotate
+  environmentIntensity={1}
+  exposure={1}
+  intro="rise"
+  autoRotateSpeed={0.4}
+  autoRotateDelay={2}
+  dragRotate
+  turntable={false}
+  zoom
+  hoverTilt={0.15}
+  float={0.3}
+  shadow
+  shadowOpacity={0.45}
+  fit={0.8}
+  offsetX={0}
+  offsetY={0}
+  startAngle={-35}
+  tilt={12}
+  resetOnDoubleClick
+/>
     </div>
                   </div>
                   <div className="p-4">
                     <h3 className="text-sm font-medium">
-                      <Link href="https://3dviewer.net/#model=https://cdn.jsdelivr.net/gh/8995riptide/robot-code@latest/designs/dr4bp1-Assembly.step">
+                        Drivetrain CAD
+                    </h3> 
+                  </div>
+                </li>
+                <li
+                  className="group/card relative min-w-0 overflow-hidden rounded-2xl border bg-card/50 transition-all focus-within:ring-2 focus-within:ring-ring hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5"
+                >
+                  <div className="border-b">
+                        <div
+      aria-hidden
+      className="relative aspect-[16/10] overflow-hidden bg-background"
+    >
+      
+<ModelViewer
+  url="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/dr4bp1-Assembly.glb"
+  width={260}
+  height={160}
+  environment="studio"
+  autoRotate
+  environmentIntensity={1}
+  exposure={1}
+  intro="rise"
+  autoRotateSpeed={0.4}
+  autoRotateDelay={2}
+  dragRotate
+  turntable={false}
+  zoom
+  hoverTilt={0.15}
+  float={0.3}
+  shadow
+  shadowOpacity={0.45}
+  fit={0.8}
+  offsetX={0}
+  offsetY={0}
+  startAngle={-35}
+  tilt={12}
+  resetOnDoubleClick
+/>
+    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-sm font-medium">
                         DR4B CAD
-                      </Link>
                     </h3> 
                   </div>
                 </li>
