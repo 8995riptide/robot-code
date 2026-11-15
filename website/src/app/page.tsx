@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ModelViewer from '../components/ModelViewer';
+import '@google/model-viewer';
 import {
   AccessibilityIcon,
   AppWindowIcon,
@@ -425,7 +426,7 @@ export default function Home() {
     >
       
 <ModelViewer
-  url="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/drivetrain-Assembly.glb"
+  url="https://8995riptide.vercel.app/drivetrain-Assembly-v1.glb"
   width={260}
   height={160}
   autoRotate={false}
@@ -435,7 +436,7 @@ export default function Home() {
                   </div>
                   <div className="p-4">
                     <h3 className="text-sm font-medium">
-                      <Link href="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/drivetrain-Assembly.glb">
+                      <Link href="https://8995riptide.vercel.app/drivetrain-Assembly-v1.glb">
                         Drivetrain CAD
                         </Link>
                     </h3> 
@@ -451,7 +452,7 @@ export default function Home() {
     >
       
 <ModelViewer
-  url="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/dr4bp1-Assembly.glb"
+  url="https://8995riptide.vercel.app/dr4bp1-Assembly-v1.glb"
   width={260}
   height={160}
   autoRotate={false}
@@ -461,7 +462,7 @@ export default function Home() {
                   </div>
                   <div className="p-4">
                     <h3 className="text-sm font-medium">
-                      <Link href="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/dr4bp1-Assembly.glb">
+                      <Link href="https://8995riptide.vercel.app/dr4bp1-Assembly-v1.glb">
                         DR4B CAD
                       </Link>
                     </h3> 
