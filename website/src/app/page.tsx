@@ -436,6 +436,7 @@ export default function Home() {
   zoom
   hoverTilt={0.15}
   float={0.3}
+  autoRotate={false}
   shadow
   shadowOpacity={0.45}
   fit={0.8}
@@ -482,6 +483,7 @@ export default function Home() {
   offsetY={0}
   startAngle={-35}
   tilt={12}
+  autoRotate={false}
   resetOnDoubleClick
 />
     </div>
