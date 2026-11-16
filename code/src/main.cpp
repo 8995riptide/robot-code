@@ -1,4 +1,5 @@
 #include "main.h"
+#include "cui.h"
 #include "lemlib/api.hpp"
 #include "pros/apix.h"
 #include <random>
@@ -249,90 +250,25 @@ void initialize() {
     pros::delay(500);
     master.clear();
     pros::delay(50);
-    const std::string charset = "0123456789";
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::uniform_int_distribution<std::size_t> distribution(0, charset.size() - 1); 
-    std::uniform_int_distribution<int> distrib(0, 3); 
-    std::uniform_int_distribution<int> distrib2(0, 15); 
-    for (int i = 0; i < 3; i++) {
-        for (int n = 0; n < 15; n++) {
-            std::size_t randomIndex = distribution(generator);
-            char randomChar = charset[randomIndex];
-            master.print(i, n, "%c", randomChar);
-            pros::delay(50);
-        }
-    }
-    std::vector<char> chars = {'R', 'O', 'B', 'O', 'S'};
-    for (int i = 0; i <= 80; i++) {
-        std::size_t randomIndex = distribution(generator);
-        char randomChar = charset[randomIndex];
-        int randomLineNum = distrib(generator);
-        int randomColNum = distrib2(generator);
-            if (randomColNum >= 5 && randomColNum <= 9 && randomLineNum == 1) {
-                pros::delay(50);
-        } else {
-        master.print(randomLineNum, randomColNum, "%c", randomChar);
-        }
-        pros::delay(50);
-        if (i % 16 == 0) {
-            master.print(1, (i/16)+5, "%c", chars[(i/16)]);
-        }
-    }
+    master.print(1, 5, "ROBOS");
+    pros::delay(50);
     master.rumble(". . .");
     pros::delay(2000);
     master.clear();
     pros::delay(50);
     master.print(0, 0, "Configure Auton");
     pros::delay(50);
-        master.print(1, 0, "R: Driver L: Judges");
-        while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
-            pros::delay(10);
-        }
-        if (master.get_digital(DIGITAL_RIGHT)) {
+    CUI cui;
+    auto mainMenu = cui.Menu("Driver", "Judges");
+    mainMenu.updateMenu();
+    while (true) {
+        int selection = mainMenu.getSelection();
+        if (selection == 1) {
             save_auton(1);
-            master.clear();
-            pros::delay(50);
-            master.rumble(".");
-            pros::delay(50);
-            master.print(0, 0, "Drive auton selected");
-            pros::delay(50);
-        } else if (master.get_digital(DIGITAL_LEFT)) {
+        } else if (selection == 2) {
             save_auton(2);
-            master.clear();
-            pros::delay(50);
-            master.rumble(".");
-            pros::delay(50);
-            master.print(0, 0, "Judges auton selected");
-            pros::delay(50);
         }
-        master.clear();
-        pros::delay(1000);
-        master.print(0, 0, "Configure driving style");
-        pros::delay(50);
-        master.print(1, 0, "R: Tank L: Arcade");
-        while (!master.get_digital(DIGITAL_RIGHT) && !master.get_digital(DIGITAL_LEFT)) {
-            pros::delay(10);
-        }
-        if (master.get_digital(DIGITAL_RIGHT)) {
-            master.clear();
-            pros::delay(50);
-            master.rumble(".");
-            pros::delay(50);
-            master.print(0, 0, "Tank drive selected");
-            pros::delay(50);
-            master.clear();
-            save_drive(1);      
-    } else if (master.get_digital(DIGITAL_LEFT)) {
-            master.clear();
-            pros::delay(50);
-            master.rumble(".");
-            pros::delay(50);
-            master.print(0, 0, "Arcade drive selected");
-            pros::delay(50);
-            master.clear();
-            save_drive(2);
-}
+    }
     pros::delay(50);
     master.print(0, 0, "Configuration done");
     pros::delay(50);
