@@ -1,3 +1,5 @@
+#pragma once
+
 // TUI Library for VEX V5 Controller using PROS
 
 #include "pros/apix.h"
@@ -17,53 +19,63 @@ class CUI {
         controller.print(line, 0, text);
     }
 
+public:
     // Displays a menu with options and allows the user to select one
     // Returns an integer representing the selected option.
     // 1 = Option 1, 2 = Option 2, etc.
     // 0 = No selection/back. It's the left arrow.
     class Menu {
-        User(char* option1, char* option2, char* option3) {
-            // Display the menu options on the controller's screen
-            void updateMenu() {
-                controller.clear();
-                controller.print(0, 0, option1);
-                controller.print(1, 0, option2);
-                controller.print(2, 0, option3);
-            }
+        CUI& cui;
+        const char* option1;
+        const char* option2;
+        const char* option3;
 
-            // Check for user input and return the selected option
-            int getSelection() {
-                while (true) {
-                    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-                        return 1; // Option 1 selected
-                    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-                        return 2; // Option 2 selected
-                    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-                        return 3; // Option 3 selected
-                    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-                        return 0; // No selection/back
-                    } else {
-                        return -1; // No selection made/None pressed
-                    }
-                }
-            }
+    public:
+        Menu(CUI& cui, const char* option1, const char* option2, const char* option3)
+            : cui(cui), option1(option1), option2(option2), option3(option3) {}
 
-            // Displaying and checking the menu is up to the user.
-            // This is just a helper class to make it easier to display a menu and check for user input.
-            // The user can call updateMenu() to display the menu and getSelection() to check for user input.
+        // Display the menu options on the controller's screen
+        void updateMenu() {
+            cui.clear();
+            cui.print(0, option1);
+            cui.print(1, option2);
+            cui.print(2, option3);
         }
+
+        // Check for user input and return the selected option
+        int getSelection() {
+            if (cui.controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+                return 1; // Option 1 selected
+            } else if (cui.controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+                return 2; // Option 2 selected
+            } else if (cui.controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+                return 3; // Option 3 selected
+            } else if (cui.controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+                return 0; // No selection/back
+            } else {
+                return -1; // No selection made/None pressed
+            }
+        }
+
+        // Displaying and checking the menu is up to the user.
+        // This is just a helper class to make it easier to display a menu and check for user input.
+        // The user can call updateMenu() to display the menu and getSelection() to check for user input.
+    };
+
+    Menu menu(const char* option1, const char* option2, const char* option3) {
+        return Menu(*this, option1, option2, option3);
     }
 
     /*
     Example Usage:
     CUI cui;
     // Create a menu with three options: "Tank drive", "Arcade drive", and "Autonomous".
-    auto mainmenu = cui.Menu("Tank drive", "Arcade drive", "Autonomous");
-    updateMenu(); // Display the menu
+    auto mainmenu = cui.menu("Tank drive", "Arcade drive", "Autonomous");
+    mainmenu.updateMenu(); // Display the menu
     while (true) {
         <OTHER ROBOT CODE>
 
-        int selection = getSelection(); // Check for user input
+        int selection = mainmenu.getSelection(); // Check for user input
         if (selection == 1) {
             // User selected "Tank drive"
             break; // Exit the menu loop or do whatever you want to do when the user selects "Tank drive"
@@ -81,5 +93,4 @@ class CUI {
         <OTHER ROBOT CODE>
     }
     */
-
 };
