@@ -1,3 +1,5 @@
+#pragma once
+
 // TUI Library for VEX V5 Controller using PROS
 
 #include "pros/apix.h"
