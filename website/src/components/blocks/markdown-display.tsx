@@ -37,7 +37,7 @@ export default function MarkdownDisplay() {
     const marks = availableWeeks.map((w) => ({ value: w, label: `Week ${w}` }));
     
     return (
-        <Box sx={{ width: '100%', display: "grid", gridTemplateColumns: { xs: "1fr", md: currentNotes.length > 1 ? "280px minmax(0, 1fr)" : "minmax(0, 1fr)" }, gap: 4, alignItems: "start", mx: "auto" }}>
+        <Box sx={{ width: '50%', display: "grid", gridTemplateColumns: { xs: "1fr", md: currentNotes.length > 1 ? "280px minmax(0, 1fr)" : "minmax(0, 1fr)" }, gap: 4, alignItems: "start", mx: "auto" }}>
             {currentNotes.length > 1 && (
             <Box>
                 <div className="border rounded-lg p-2">
