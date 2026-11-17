@@ -1,6 +1,7 @@
 ---
 title: About the Team Members
 summary: A brief paragraph about each team member from 8995Riptide
+week: 1
 ---
 
 ## 2026-2027 8995R Team Members
