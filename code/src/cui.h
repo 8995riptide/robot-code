@@ -17,6 +17,7 @@ class CUI {
     // Prints text to the controller's screen at a specified line
     void print(int line, const char* text) {
         controller.print(line, 0, text);
+        pros::delay(50); // Small delay to ensure the text is displayed properly
     }
 
 public:
@@ -41,16 +42,20 @@ public:
             cui.print(1, option2);
             cui.print(2, option3);
         }
-
+        bool menuActive = true; // Menu is active by default
         // Check for user input and return the selected option
         int getSelection() {
             if (cui.controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+                menuActive = false; // Menu is no longer active after a selection is made
                 return 1; // Option 1 selected
             } else if (cui.controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+                menuActive = false; // Menu is no longer active after a selection is made
                 return 2; // Option 2 selected
             } else if (cui.controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+                menuActive = false; // Menu is no longer active after a selection is made
                 return 3; // Option 3 selected
             } else if (cui.controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+                menuActive = false; // Menu is no longer active after a selection is made
                 return 0; // No selection/back
             } else {
                 return -1; // No selection made/None pressed

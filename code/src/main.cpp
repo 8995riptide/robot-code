@@ -60,6 +60,15 @@ void save_auton(int selection) {
         }
     }
 }
+void save_side(int selection) {
+    if (pros::usd::is_installed()) {
+        FILE* file = fopen("/usd/side_selection.txt", "w");
+        if (file != nullptr) {
+            fprintf(file, "%d", selection);
+            fclose(file);
+        }
+    }
+}
 void save_drive(int selection) {
     if (pros::usd::is_installed()) {
         FILE* file = fopen("/usd/drive_selection.txt", "w");
@@ -72,6 +81,18 @@ void save_drive(int selection) {
 int get_auton() {
     if (pros::usd::is_installed()) {
         FILE* file = fopen("/usd/auton_selection.txt", "r");
+        if (file != nullptr) {
+            int selection;
+            fscanf(file, "%d", &selection);
+            fclose(file);
+            return selection;
+        }
+    }
+    return 0;
+}
+int get_side() {
+    if (pros::usd::is_installed()) {
+        FILE* file = fopen("/usd/side_selection.txt", "r");
         if (file != nullptr) {
             int selection;
             fscanf(file, "%d", &selection);
@@ -259,15 +280,51 @@ void initialize() {
     master.print(0, 0, "Configure Auton");
     pros::delay(50);
     CUI cui;
-    auto mainMenu = cui.Menu("Driver", "Judges");
-    mainMenu.updateMenu();
-    while (true) {
-        int selection = mainMenu.getSelection();
+    auto automenu = cui.menu("Driver", "Judges", "");
+    automenu.updateMenu();
+    while (automenu.menuActive) {
+        int selection = automenu.getSelection();
         if (selection == 1) {
             save_auton(1);
         } else if (selection == 2) {
             save_auton(2);
         }
+    }
+    master.clear();
+    auto drivemenu = cui.menu("Tank", "Arcade", "");
+    drivemenu.updateMenu();
+    while (drivemenu.menuActive) {
+        int selection = drivemenu.getSelection();
+        if (selection == 1) {
+            save_drive(1);
+        } else if (selection == 2) {
+            save_drive(2);
+        }
+    }
+    auto sidemenu = cui.menu("Red", "Blue", "");
+    sidemenu.updateMenu();
+    while (sidemenu.menuActive) {
+        int selection = sidemenu.getSelection();
+        if (selection == 1) {
+            save_side(1);
+        } else if (selection == 2) {
+            save_side(2);
+        }
+    }
+    auto compmenu = cui.menu("Comp", "Drive", "Auton");
+    compmenu.updateMenu();
+    master.clear();
+    while (compmenu.menuActive) {
+        int selection = compmenu.getSelection();
+        if (selection == 1) {
+            break;
+        } else if (selection == 2) {
+            competition_initialize();
+            opcontrol();
+        } else if (selection == 3) {
+            competition_initialize();
+            autonomous();
+        }   
     }
     pros::delay(50);
     master.print(0, 0, "Configuration done");
