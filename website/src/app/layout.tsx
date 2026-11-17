@@ -4,7 +4,7 @@ import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/lib/site-config";
-
+import Script from "next/script";
 const geistSans = Geist({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -68,6 +68,11 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <Script
+          type="module"
+          src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.4.0/model-viewer.min.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
