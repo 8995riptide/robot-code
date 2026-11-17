@@ -429,7 +429,7 @@ export default function Home() {
                   </div>
                   <div className="p-4">
                     <h3 className="text-sm font-medium">
-                      <Link href="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/drivetrain-Assembly-v1.glb">
+                      <Link href="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/drivetrain-Assembly.glb">
                         Drivetrain CAD
                         </Link>
                     </h3> 
@@ -449,7 +449,7 @@ export default function Home() {
                   </div>
                   <div className="p-4">
                     <h3 className="text-sm font-medium">
-                      <Link href="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/dr4bp1-Assembly-v1.glb">
+                      <Link href="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/dr4bp1-Assembly.glb">
                         DR4B CAD
                       </Link>
                     </h3> 
