@@ -418,12 +418,54 @@ export default function Home() {
                 <li
                   className="group/card relative min-w-0 overflow-hidden rounded-2xl border bg-card/50 transition-all focus-within:ring-2 focus-within:ring-ring hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5"
                 >
-                  
+                  <div className="border-b">
+                        <div
+      aria-hidden
+      className="relative aspect-[16/10] overflow-hidden bg-background"
+    >
+      
+<ModelViewer
+  url="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/drivetrain-Assembly-v1.glb"
+  width={260}
+  height={160}
+  autoRotate={false}
+  resetOnDoubleClick
+/>
+    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-sm font-medium">
+                      <Link href="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/drivetrain-Assembly-v1.glb">
+                        Drivetrain CAD
+                        </Link>
+                    </h3> 
+                  </div>
                 </li>
                 <li
                   className="group/card relative min-w-0 overflow-hidden rounded-2xl border bg-card/50 transition-all focus-within:ring-2 focus-within:ring-ring hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5"
                 >
-                  
+                  <div className="border-b">
+                        <div
+      aria-hidden
+      className="relative aspect-[16/10] overflow-hidden bg-background"
+    >
+      
+<ModelViewer
+  url="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/dr4bp1-Assembly-v1.glb"
+  width={260}
+  height={160}
+  autoRotate={false}
+  resetOnDoubleClick
+/>
+    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-sm font-medium">
+                      <Link href="https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/dr4bp1-Assembly-v1.glb">
+                        DR4B CAD
+                      </Link>
+                    </h3> 
+                  </div>
                 </li>
             </ul>
           </div>
