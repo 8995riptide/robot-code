@@ -35,10 +35,11 @@ export default function MarkdownDisplay() {
     }, [currentNotes, week]);
     const activeNote = useMemo(() => currentNotes.find((note) => note._meta.path === selectedPath), [currentNotes, selectedPath]);
     const marks = availableWeeks.map((w) => ({ value: w, label: `Week ${w}` }));
+    
     return (
-        <Box sx={{ width: '50%', display: "grid", gridTemplateColumns: { xs: "1fr", md: "280px minmax(0, 1fr)" }, gap: 4, alignItems: "start", mx: "auto" }}>
-            <Box>
+        <Box sx={{ width: '100%', display: "grid", gridTemplateColumns: { xs: "1fr", md: currentNotes.length > 1 ? "280px minmax(0, 1fr)" : "minmax(0, 1fr)" }, gap: 4, alignItems: "start", mx: "auto" }}>
             {currentNotes.length > 1 && (
+            <Box>
                 <div className="border rounded-lg p-2">
                     <p className="text-xs font-semibold uppercase text-muted-foreground px-3 py-2">
                       Week {week}   
@@ -51,8 +52,9 @@ export default function MarkdownDisplay() {
                     ))}
                 </List>
                           </div>
-            )}
+            
             </Box>
+            )}
             <Box sx={{ width: '100%', mx: "auto" }}>
             <Box sx={{ width: 300, mx: "auto" }}>
                 <Slider
