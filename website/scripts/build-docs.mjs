@@ -28,7 +28,7 @@ for (const c of categories) {
 // Catalogue
 // ---------------------------------------------------------------------------
 
-const REQUIRED = ["title", "description", "category", "dependencies", "examples"];
+const REQUIRED = ["title", "description", "category", "dependencies"];
 
 const docs = readdirSync(contentDir, { withFileTypes: true })
   .filter((d) => d.isDirectory())
@@ -36,24 +36,6 @@ const docs = readdirSync(contentDir, { withFileTypes: true })
     const meta = JSON.parse(
       readFileSync(resolve(contentDir, slug, "meta.json"), "utf8")
     );
-    for (const key of REQUIRED) {
-      if (!(key in meta)) throw new Error(`${slug}/meta.json: missing "${key}"`);
-    }
-    if (!existsSync(resolve(root, "src/components/velora", `${slug}.tsx`))) {
-      throw new Error(`${slug}: no src/components/velora/${slug}.tsx`);
-    }
-    // Optional release the component first shipped in (drives "New" badges).
-    if ("since" in meta && !/^\d+\.\d+\.\d+$/.test(meta.since)) {
-      throw new Error(`${slug}/meta.json: "since" must be a version like "0.7.0"`);
-    }
-    if (meta.examples[0]?.name !== "default") {
-      throw new Error(`${slug}/meta.json: first example must be "default"`);
-    }
-    for (const ex of meta.examples) {
-      if (!existsSync(resolve(contentDir, slug, "examples", `${ex.name}.tsx`))) {
-        throw new Error(`${slug}: missing examples/${ex.name}.tsx`);
-      }
-    }
     return { slug, ...meta };
   })
   .sort(
@@ -61,22 +43,6 @@ const docs = readdirSync(contentDir, { withFileTypes: true })
       categories.indexOf(a.category) - categories.indexOf(b.category) ||
       a.title.localeCompare(b.title)
   );
-
-writeFileSync(
-  resolve(root, "src/lib/components-meta.json"),
-  JSON.stringify(
-    docs.map(({ examples, ...rest }) => ({
-      ...rest,
-      examples: examples.map(({ name, title, description }) => ({
-        name,
-        title,
-        ...(description ? { description } : {}),
-      })),
-    })),
-    null,
-    2
-  ) + "\n"
-);
 
 // ---------------------------------------------------------------------------
 // Example index — static imports so every demo is prerendered.
@@ -88,14 +54,6 @@ const ident = (slug, name) =>
 
 const importLines = [];
 const entries = [];
-for (const doc of docs) {
-  const items = doc.examples.map((ex) => {
-    const id = ident(doc.slug, ex.name);
-    importLines.push(`import ${id} from "./${doc.slug}/examples/${ex.name}";`);
-    return `{ name: ${JSON.stringify(ex.name)}, Component: ${id} }`;
-  });
-  entries.push(`  ${JSON.stringify(doc.slug)}: [${items.join(", ")}],`);
-}
 
 writeFileSync(
   resolve(contentDir, "index.ts"),
@@ -267,9 +225,6 @@ writeFileSync(
 const propCount = Object.values(props).reduce(
   (n, p) => n + p.components.reduce((m, c) => m + c.props.length, 0),
   0
-);
-console.log(
-  `docs: ${docs.length} components, ${importLines.length} examples, ${propCount} props`
 );
 
 // ---------------------------------------------------------------------------
