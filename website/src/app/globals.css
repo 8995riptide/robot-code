@@ -73,6 +73,30 @@
   --animate-moving-border: moving-border var(--mb-duration, 4s) linear infinite;
   --animate-flicker: flicker 3s steps(1, end) infinite;
   --animate-ripple-ring: ripple-ring 3s ease-out infinite;
+  @keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+    }
+  50% {
+    background-position: 100% 50%;
+    }
+  }
+  @keyframes shimmer {
+  from {
+    background-position: 200% 0;
+    }
+  to {
+    background-position: -200% 0;
+    }
+  }
+  @keyframes moving-border {
+  from {
+    offset-distance: 0%;
+    }
+  to {
+    offset-distance: 100%;
+    }
+  }
 }
 
 :root {

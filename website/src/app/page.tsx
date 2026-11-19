@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { HyperText } from "@/components/velora/hyper-text";
 import ModelViewer from '../components/ModelViewer';
 import {
   AccessibilityIcon,
@@ -66,6 +67,17 @@ import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import { AnimatedList } from "@/components/velora/animated-list";
 import MarkdownDisplay from "@/components/blocks/markdown-display";
+import { NumberTicker } from "@/components/velora/number-ticker";
+import { AnimatedGradientText } from "@/components/velora/animated-gradient-text";
+import { Typewriter } from "@/components/velora/typewriter";
+import { ShimmerButton } from "@/components/velora/shimmer-button";
+import { MovingBorder } from "@/components/velora/moving-border";
+import { ScrollProgress } from "@/components/velora/scroll-progress";
+import { FollowingPointer } from "@/components/velora/following-pointer";
+import { Lens } from "@/components/velora/lens";
+import { TiltCard } from "@/components/velora/tilt-card";
+import { Terminal } from "@/components/velora/terminal";
+import { Timeline } from "@/components/velora/timeline";
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
@@ -270,6 +282,78 @@ export default function Home() {
       ],
     },
   ];
+  const timeline = [
+  {
+    title: "Week 1",
+    content: (
+      <>
+        <p className="text-muted-foreground">
+          The first commit. A few build ideas, a few CAD outlines, a few lines of code. First design ideas, lift ideas, drivetrain and claw/toggle ideas. DR4B or Cascade? One sided or two-sided claw? Gear ratios?
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "Week 2",
+    content: (
+      <>
+        <p className="text-muted-foreground">
+          Two sided claw using Vex Claw Kit is planned. CAD finished, temporary DR4B planned. Drivetrain close to being complete. First competition is coming up, so we are focusing on building and programming the robot.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "Week 3",
+    content: (
+      <>
+        <p className="text-muted-foreground">
+          Fixed drivetrain, DR4B and claw. Tested all three. Code written and compiled. One sided claw built(no parts for two sided), regular four bar built(no parts for DR4B).
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "Oct 23rd Competition",
+    content: (
+      <p className="text-muted-foreground">
+        First competition. Did pretty well, placed 6th out of 21. Drivetrain worked fine, as well as lift, toggles and claw. Will make improvements to drivetrain and lift for next competition. Will also make a DR4B/cascade for next competition. 
+      </p>
+    ),
+  },
+  {
+    title: "Week 4",
+    content: (
+      <p className="text-muted-foreground">
+        DR4B or Cascade? Planned both, decided to build chain cascade first. Optimized code and CAD. Fixed drivetrain with better gear ratio
+      </p>
+    ),
+  },
+    {
+    title: "Week 5",
+    content: (
+      <p className="text-muted-foreground">
+        Cascade structure bult, but no sprokets or chain available. Perhaps string? Tested code, but no way to test cascade. Drivetrain and CAD optimized.
+      </p>
+    ),
+  },
+      {
+    title: "Week 6",
+    content: (
+      <p className="text-muted-foreground">
+        No materials for cascade, so building DR4B. DR4B cadded, halfway built. Code and drivetrain optimized and tested. We are not quite ready for the next competition, but we will be ready for the one after that.
+      </p>
+    ),
+  },
+        {
+    title: "Nov 13th Competition",
+    content: (
+      <p className="text-muted-foreground">
+        Did decent in comp, got 6th. Got carried, DR4B wasn't done, brain and code was giving errors, drivetrain was very slow. Need to build lift and optimize code and drivetrain for next comp.
+      </p>
+    ),
+  },
+];
   const FRAME_WIDTH = 1280;
   return (
     <>
@@ -286,7 +370,10 @@ export default function Home() {
         ]}
       />
       <SiteHeader />
-
+      <ScrollProgress/>
+      <FollowingPointer
+      label="You(viewer)"
+    >
       <main>
         {/* Hero + live showcase */}
         <section className="relative overflow-hidden pt-28 pb-16 lg:pt-36">
@@ -311,28 +398,33 @@ export default function Home() {
 
               <h1 className="mt-6 text-4xl font-semibold tracking-tight text-balance sm:text-5xl xl:text-6xl">
                 Welcome to{" "}
-                <span className="bg-linear-to-r from-brand-from via-brand-via to-brand-to bg-clip-text text-transparent">
+                <AnimatedGradientText className="bg-linear-to-r from-brand-from via-brand-via to-brand-to bg-clip-text text-transparent">
                   8995R Riptide
-                </span>
+                </AnimatedGradientText>
               </h1>
               <p className="mt-5 max-w-xl text-lg text-muted-foreground text-pretty">
-                The official site for all things 8995Riptide.
+                The official site for all things {" "}
+                <AnimatedGradientText>
+        <Typewriter words={["designing.", "building.", "programming.", "8995Riptide."]} />
+      </AnimatedGradientText>
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
+                <ShimmerButton className="inline-flex h-11 items-center gap-2 px-6 text-sm font-medium text-background shadow-lg shadow-primary/20 transition-opacity hover:opacity-90">
                 <Link
                   href="/#stats"
-                  className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-medium text-background shadow-lg shadow-primary/20 transition-opacity hover:opacity-90"
                 >
+                  
                   Browse stats
-                  <ArrowRightIcon className="size-4" />
                 </Link>
+                </ShimmerButton>
+                <MovingBorder className="inline-flex items-center">
                 <Link
-                  href="/components/get-started"
-                  className="inline-flex h-11 items-center rounded-full border bg-background/60 px-6 text-sm font-medium backdrop-blur transition-colors hover:bg-muted"
+                  href={siteConfig.github}
                 >
-                  Get started
+                  View repo
                 </Link>
+                </MovingBorder>
               </div>
             </div>
           </div>
@@ -348,10 +440,11 @@ export default function Home() {
               />
 
             </div>
+            <TiltCard>  
           <dl className="mx-auto grid max-w-6xl grid-cols-2 gap-px overflow-hidden rounded-2xl border bg-border lg:grid-cols-4">
             
             {[
-              { value: 1, label: "events" },
+              { value: 2, label: "events" },
               { value: "5-3-0", label: "matches" },
               { value: 1.3, label: "Avg WP / Match" },
               { value: "63%", label: "Win Rate" },
@@ -362,17 +455,32 @@ export default function Home() {
               </div>
             ))}
           </dl>
+          </TiltCard>
+          
         </section>
-
+        <section aria-label="Timeline" className="mx-auto max-w-6xl px-4 py-14 lg:px-8" id="timeline">
+          <SectionHeading
+                id="timeline"
+                eyebrow="Timeline"
+                title="Our Timeline"
+              />
+            <div className="p-5">
+          <Timeline items={timeline}/>
+          </div>
+        </section>
         {/* Categories */}
         <section aria-labelledby="events" className="py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <SectionHeading
-                id="events"
-                eyebrow="Events"
-                title={`${events.length} events`}
-              />
+              <div className={cn("max-w-2xl")}>
+      <p className="text-sm font-medium text-primary">Events</p>
+      <h2
+        id="events"
+        className="mt-2 text-3xl font-semibold tracking-tight text-balance lg:text-4xl"
+      >
+         <NumberTicker value={2}/> events
+      </h2>
+    </div>
 
             </div>
             <ul className="mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
@@ -412,7 +520,7 @@ export default function Home() {
         <section aria-labelledby="blocks" className="py-14 lg:py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <SectionHeading id="blocks" eyebrow="CAD" title="Our CAD models, free" />
+              <SectionHeading id="cad" eyebrow="CAD" title="Our CAD models, free" />
             </div>
             <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <li
@@ -423,7 +531,7 @@ export default function Home() {
       aria-hidden
       className="relative aspect-[16/10] overflow-hidden bg-background"
     >
-      
+
 <iframe width="260" height="160" src="https://3dviewer.net/embed.html#model=https://pub-00a1ddf6905e4f7bb0d5cd4859c09c8c.r2.dev/drivetrain-Assembly.glb"></iframe>
     </div>
                   </div>
@@ -462,29 +570,27 @@ export default function Home() {
         <section aria-labelledby="install" className="py-14 lg:py-20">
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 lg:grid-cols-5 lg:gap-16 lg:px-8">
             <div className="lg:col-span-2">
-              <SectionHeading id="Repo" eyebrow="Our repo" title="Install in seconds" />
+              <SectionHeading id="repo" eyebrow="Our repo" title="Install in seconds" />
             </div>
-            <ol className="min-w-0 space-y-6 lg:col-span-3">
-              {installSteps.map((step) => (
-                <li key={step.title} className="min-w-0">
-                  <p className="mb-2 text-sm font-medium">{step.title}</p>
-                  <div className="flex items-start gap-3 rounded-xl border bg-neutral-950 py-2 pr-2 pl-4 text-neutral-200">
-                    <code className="min-w-0 flex-1 py-1.5 font-mono text-sm break-all">
-                      {step.command}
-                    </code>
-                    <CopyButton
-                      text={step.command}
-                      label={`Copy: ${step.title.slice(3).toLowerCase()} command`}
-                      className="shrink-0 border-white/15 bg-white/5 text-neutral-300"
-                    />
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <Terminal
+      className="min-w-0 space-y-6 lg:col-span-3"
+      lines={[
+        "1. Clone the repo",
+        "$ git clone https://github.com/8995riptide/robot-code.git",
+        "2. Navigate to the project directory",
+        "$ cd robot-code",
+        "3. View CAD models",
+        "$ cd designs && <software> <model-file>",
+        "4. View code",
+        "$ <software> ../code/src/main.cpp",
+        "4. View notes",
+        "$ cd ../notes && <software> <note-file>",
+      ]}
+    />
           </div>
         </section>
       </main>
-
+      </FollowingPointer>
       <SiteFooter />
     </>
   );

@@ -16,7 +16,6 @@ interface TimelineProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Entries, rendered in order as an ordered list */
   items: TimelineItem[];
   /** Scrollable element to track instead of the window */
-  container?: React.RefObject<HTMLElement | null>;
 }
 
 /**
@@ -27,11 +26,11 @@ interface TimelineProps extends React.HTMLAttributes<HTMLDivElement> {
  */
 export function Timeline({
   items,
-  container,
   className,
   ...props
 }: TimelineProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const container = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     container,
     target: ref,
@@ -41,11 +40,15 @@ export function Timeline({
   const top = useTransform(progress, (v) => `${v * 100}%`);
 
   return (
+      <div
+    ref={container}
+    className={cn("relative h-125 w-full overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden @container-size", className)}
+    {...props}
+  >
     <div
       ref={ref}
       data-slot="timeline"
-      className={cn("relative @container/timeline", className)}
-      {...props}
+      className={cn("relative @container/timeline")}
     >
       <div aria-hidden className="absolute inset-y-0 left-3 w-0.5 -translate-x-1/2">
         <div className="absolute inset-0 bg-border [mask-image:linear-gradient(to_bottom,transparent,black_4%,black_96%,transparent)]">
@@ -83,6 +86,7 @@ export function Timeline({
           </li>
         ))}
       </ol>
+    </div>
     </div>
   );
 }

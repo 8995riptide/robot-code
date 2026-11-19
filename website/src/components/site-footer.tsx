@@ -17,54 +17,34 @@ const topCategories = Object.entries(
 
 const groups = [
   {
-    title: "Product",
+    title: "Website",
     links: [
-      { text: "Components", href: "/components" },
-      { text: "Blocks", href: "/blocks" },
-      { text: "Templates", href: "/templates" },
-      { text: "Themes", href: "/themes" },
-      { text: "Pricing", href: "/pricing" },
-      { text: "Changelog", href: "/changelog" },
+      { text: "Stats", href: "/#stats" },
+      { text: "Events", href: "/#events" },
+      { text: "Notebook", href: "/#notes" },
+      { text: "CAD", href: "/#cad" },
+      { text: "Install", href: "/#repo" },
     ],
   },
   {
-    title: "Resources",
+    title: "Stats from other Websites",
     links: [
-      { text: "Get started", href: "/components/get-started" },
-      { text: "AI & MCP", href: "/components/ai" },
+      { text: "Robot Statistics", href: "https://robotstatistics.com/teams/8995R" },
+      { text: "RoboWorld", href: "https://roboworld.ai/teams/v5rc/8995R" },
       { text: "Showcase", href: "/showcase" },
       { text: "Blog", href: "/blog" },
+    ],
+  },
+  {
+    title: "Other Sources",
+    links: [
       { text: "llms.txt", href: "/llms.txt" },
       { text: "GitHub", href: siteConfig.github },
-    ],
-  },
-  {
-    title: "Compare",
-    links: [
-      { text: "vs Aceternity UI", href: "/compare/aceternity-ui" },
-      { text: "vs Magic UI", href: "/compare/magic-ui" },
-      { text: "vs React Bits", href: "/compare/react-bits" },
-    ],
-  },
-  {
-    title: "Categories",
-    links: [
-      ...topCategories.map((category) => ({
-        text: category,
-        href: `/components/category/${categorySlug(category)}`,
-      })),
-      { text: "All components", href: "/components" },
-    ],
-  },
-  {
-    title: "Template demo",
-    links: [
-      { text: "SaaS landing", href: "/templates/saas" },
-      { text: "About", href: "/about" },
-      { text: "Contact", href: "/contact" },
-      { text: "Log in", href: "/login" },
-      { text: "Sign up", href: "/signup" },
-      { text: "404 page", href: "/404-demo" },
+      { text: "Velora UI", href: "https://velora.colorlib.com/" },
+      { text: "Vercel", href: "https://vercel.com" },
+      { text: "Next.js", href: "https://nextjs.org" },
+      { text: "Tailwind CSS", href: "https://tailwindcss.com" },
+      { text: "Colorlib", href: "https://colorlib.com" },
     ],
   },
 ];
@@ -79,14 +59,13 @@ export function SiteFooter() {
         <div className="col-span-2 md:col-span-3 lg:col-span-1">
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <SparklesIcon className="size-5 text-primary" />
-            Velora UI
+            8995Riptide
           </Link>
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-            Free, MIT-licensed animated components and section blocks for
-            React, Tailwind CSS 4 and shadcn/ui.
+            Everything to do with 8995Riptide
           </p>
           <p className="mt-4 text-xs text-muted-foreground">
-            Built with Next.js 16, Tailwind CSS 4 &amp; Motion
+            Built with Next.js 16, Tailwind CSS 4, Velora UI, &amp; Motion
           </p>
         </div>
         {groups.map((group) => (
@@ -124,9 +103,8 @@ export function SiteFooter() {
       </div>
       <div className="mx-auto mt-12 flex max-w-7xl flex-col items-center justify-between gap-2 border-t border-border/40 px-4 pt-6 text-center text-xs text-muted-foreground md:flex-row md:text-left lg:px-8">
         <span>
-          © {new Date().getFullYear()} Velora UI — MIT licensed, free forever.
+          © {new Date().getFullYear()} 8995Riptide. All rights reserved.
         </span>
-        <span>Every animation respects prefers-reduced-motion.</span>
         <span>
           Made by{" "}
           <a

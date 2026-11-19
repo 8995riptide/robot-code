@@ -47,7 +47,7 @@ export function TracingBeam({ children, className }: TracingBeamProps) {
     >
       <div
         aria-hidden
-        className="absolute -left-4 top-0 hidden h-full w-px bg-border md:block"
+        className="absolute top-0 hidden h-full w-px bg-border md:block"
       >
         <motion.div
           style={{ height: drawn }}

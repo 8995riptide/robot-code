@@ -6,6 +6,7 @@ import { MobileNav } from "@/components/mobile-nav";
 import { Search } from "@/components/search";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { siteConfig } from "@/lib/site-config";
+import { ScrollProgress } from "./velora/scroll-progress";
 
 export function SiteHeader() {
   return (
@@ -16,7 +17,6 @@ export function SiteHeader() {
           8995R
         </Link>
         <div className="flex items-center gap-2">
-          <Search />
           <ThemeToggle />
           <Button variant="outline" size="sm" asChild>
             <a
@@ -30,6 +30,7 @@ export function SiteHeader() {
             </a>
           </Button>
         </div>
+        
       </div>
     </header>
   );
