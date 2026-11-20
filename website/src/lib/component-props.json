@@ -3791,7 +3791,7 @@
   "terminal": {
     "components": [
       {
-        "name": "Terminal",
+        "name": "TerminalView",
         "description": "A terminal window that types its lines when scrolled into view.",
         "extends": [],
         "forwardsRest": false,
@@ -4047,12 +4047,6 @@
             "type": "TimelineItem[]",
             "required": true,
             "description": "Entries, rendered in order as an ordered list"
-          },
-          {
-            "name": "container",
-            "type": "React.RefObject<HTMLElement | null>",
-            "required": false,
-            "description": "Scrollable element to track instead of the window"
           }
         ]
       }

@@ -19,7 +19,7 @@ interface TerminalProps {
 /**
  * A terminal window that types its lines when scrolled into view.
  */
-export function Terminal({
+export function TerminalView({
   lines,
   title = "bash",
   speed = 18,

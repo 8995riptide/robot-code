@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { HyperText } from "@/components/velora/hyper-text";
 import ModelViewer from '../components/ModelViewer';
+import InteractiveTerminal from "../components/ui/terminal";
 import {
   AccessibilityIcon,
   AppWindowIcon,
@@ -76,7 +77,7 @@ import { ScrollProgress } from "@/components/velora/scroll-progress";
 import { FollowingPointer } from "@/components/velora/following-pointer";
 import { Lens } from "@/components/velora/lens";
 import { TiltCard } from "@/components/velora/tilt-card";
-import { Terminal } from "@/components/velora/terminal";
+import { TerminalView } from "@/components/velora/terminal";
 import { Timeline } from "@/components/velora/timeline";
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -354,7 +355,7 @@ export default function Home() {
     ),
   },
 ];
-  const FRAME_WIDTH = 1280;
+  const FRAME_WIDTH = 1280
   return (
     <>
       <JsonLd
@@ -369,11 +370,29 @@ export default function Home() {
           { ...publisher, sameAs: [siteConfig.github] },
         ]}
       />
+                  <InteractiveTerminal
+        command="pnpm run dev"
+        autoExecute
+        variant="sky"
+        title="bash — 80×24"
+        steps={[
+          "Running setup...",
+          "Creating the sea...",
+          "Setting up the sand...",
+          "Configuring the waves...",
+          "Wiring up the shore...",
+          "Unleashing the tides...",
+        ]}
+        finalMessage={`Welcome to 8995 Riptide!`}
+        stepDelay={900}
+        className="fixed inset-0 z-[9999] grid place-items-center bg-black/80 p-4"
+      />
       <SiteHeader />
       <ScrollProgress/>
       <FollowingPointer
       label="You(viewer)"
     >
+
       <main>
         {/* Hero + live showcase */}
         <section className="relative overflow-hidden pt-28 pb-16 lg:pt-36">
@@ -572,7 +591,7 @@ export default function Home() {
             <div className="lg:col-span-2">
               <SectionHeading id="repo" eyebrow="Our repo" title="Install in seconds" />
             </div>
-            <Terminal
+            <TerminalView
       className="min-w-0 space-y-6 lg:col-span-3"
       lines={[
         "1. Clone the repo",
