@@ -112,28 +112,6 @@
     ]
   },
   {
-    "slug": "hero-grid-minimal",
-    "title": "Developer tool hero",
-    "description": "Minimal hero on a retro grid with a typed headline accent, an install terminal and two CTAs.",
-    "category": "hero-sections",
-    "order": 6,
-    "file": "src/components/blocks/hero-grid-minimal.tsx",
-    "importPath": "@/components/blocks/hero-grid-minimal",
-    "exportName": "HeroGridMinimal",
-    "components": [
-      "blur-fade",
-      "retro-grid",
-      "terminal",
-      "typewriter"
-    ],
-    "ui": [
-      "button"
-    ],
-    "dependencies": [
-      "lucide-react"
-    ]
-  },
-  {
     "slug": "features-bento",
     "title": "Bento feature grid",
     "description": "Five-card bento grid with live visuals: integration beams, orbiting icons, a chart, a tag marquee and a globe.",
