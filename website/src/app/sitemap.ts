@@ -39,20 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   const staticPages = [
-    "",
-    "/components",
-    "/components/get-started",
-    "/components/ai",
-    "/blocks",
-    "/templates",
-    "/templates/saas",
-    "/showcase",
-    "/themes",
-    "/pricing",
-    "/blog",
-    "/changelog",
-    "/about",
-    "/contact",
+    "/",
   ].map((path) => ({
     url: `${BASE}${path}`,
     changeFrequency: "weekly" as const,
@@ -100,10 +87,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     ...staticPages,
-    ...templatePages,
-    ...blockPages,
-    ...componentPages,
-    ...comparePages,
-    ...postPages,
   ];
 }
