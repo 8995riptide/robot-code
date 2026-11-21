@@ -264,9 +264,6 @@ void initialize() {
         flags = 1;
     }
     pros::delay(100);
-    while (flags == 1) {
-        pros::delay(100);
-    }
     master.print(2, 0, " Starting ROBOS...");
     pros::delay(500);
     master.clear();
